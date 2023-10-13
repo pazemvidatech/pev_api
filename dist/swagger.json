@@ -1,0 +1,1662 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Pev - API Documentation",
+    "description": "The API is the primary means for developers to access a collection of Pev resources and integrate with their system. \n* **RESTful API** - All of our APIs are organized around the REST architecture and are accessed via HTTP. \n* **API responses** - A JSON will be returned for all API responses, including error cases. \n* **Access token** - All requests for API are authenticated through an access token sent in the request, which must be obtained following the steps described in the Authentication flow.",
+    "version": "1.0.0",
+    "contact": {
+      "email": "viniciuscarvalho60@yahoo.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://apit.pev.com.br/v1",
+      "description": "API host Dev",
+      "variables": {
+        "schema": {
+          "enum": [
+            "https"
+          ],
+          "default": "https"
+        }
+      }
+    },
+    {
+      "url": "https://api.pev.com.br/v1",
+      "description": "API host Prod",
+      "variables": {
+        "schema": {
+          "enum": [
+            "https"
+          ],
+          "default": "https"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/accounts/profile": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get profile",
+        "description": "List all accounts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "document"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "document": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "birthday_date": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/errors/404"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Create a category",
+        "description": "Create a new category",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/bodies/post/Category"
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "List categories",
+        "description": "List all categories",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/categories/{category_id}": {
+      "delete": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Delete a category",
+        "description": "Delete a specific category",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/category_id"
+          },
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Update a category",
+        "description": "Update a specific category",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/category_id"
+          },
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/bodies/put/Category"
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/cities": {
+      "post": {
+        "tags": [
+          "City"
+        ],
+        "summary": "Create a city",
+        "description": "Create a new city",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/bodies/post/City"
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/City"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "City"
+        ],
+        "summary": "List cities",
+        "description": "List all cities",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/City"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/cities/{city_id}": {
+      "delete": {
+        "tags": [
+          "City"
+        ],
+        "summary": "Delete a city",
+        "description": "Delete a specific city",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/city_id"
+          },
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "City"
+        ],
+        "summary": "Update a city",
+        "description": "Update a specific city",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/city_id"
+          },
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/bodies/put/City"
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/subscriptions": {
+      "post": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Create a subscription",
+        "description": "Create a new subscription",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/bodies/post/Subscription"
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "List subscriptions",
+        "description": "List all subscriptions",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subscription"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscription_id}": {
+      "delete": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Delete a subscription",
+        "description": "Delete a specific subscription",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Update a subscription",
+        "description": "Update a specific subscription",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/bodies/put/Subscription"
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/passwords/forgot": {
+      "post": {
+        "tags": [
+          "Password"
+        ],
+        "summary": "Forgot Password",
+        "description": "Send a reset password link to email",
+        "requestBody": {
+          "$ref": "#/components/bodies/post/ForgotPassword"
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/passwords/reset": {
+      "post": {
+        "tags": [
+          "Password"
+        ],
+        "summary": "Reset Password",
+        "description": "Reset password with token sent by email",
+        "requestBody": {
+          "$ref": "#/components/bodies/post/ResetPassword"
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "tags": [
+          "Authenticate"
+        ],
+        "summary": "SignIn",
+        "description": "Sign In",
+        "requestBody": {
+          "$ref": "#/components/bodies/post/SignIn"
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/errors/401"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "Authenticate"
+        ],
+        "summary": "SignUp",
+        "description": "Sign Up",
+        "requestBody": {
+          "$ref": "#/components/bodies/post/SignUp"
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          }
+        }
+      }
+    },
+    "/auth/confirm-signup": {
+      "post": {
+        "tags": [
+          "Authenticate"
+        ],
+        "summary": "ConfirmSignUp",
+        "description": "Confirm SignUp Up",
+        "requestBody": {
+          "$ref": "#/components/bodies/post/ConfirmSignUp"
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "tags": [
+          "Authenticate"
+        ],
+        "summary": "Refresh token",
+        "description": "Refresh token",
+        "requestBody": {
+          "$ref": "#/components/bodies/post/RefreshToken"
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/errors/401"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          }
+        }
+      }
+    },
+    "/essays": {
+      "post": {
+        "tags": [
+          "Essay"
+        ],
+        "summary": "Create a essay",
+        "description": "Create a new essay",
+        "requestBody": {
+          "$ref": "#/components/bodies/post/Essay"
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Essay"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Essay"
+        ],
+        "summary": "List essays",
+        "description": "List all essays",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/size"
+          },
+          {
+            "$ref": "#/components/parameters/statusEssay"
+          },
+          {
+            "$ref": "#/components/parameters/sortEssay"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Essay"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "size": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/errors/404"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/essays/{essay_id}": {
+      "delete": {
+        "tags": [
+          "Essay"
+        ],
+        "summary": "Delete a essay",
+        "description": "Delete a specific essay",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/essay_id"
+          },
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "404": {
+            "$ref": "#/components/errors/404"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Essay"
+        ],
+        "summary": "Update a essay",
+        "description": "Update a specific essay",
+        "requestBody": {
+          "$ref": "#/components/bodies/put/Essay"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/essay_id"
+          },
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "404": {
+            "$ref": "#/components/errors/404"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/packages": {
+      "post": {
+        "tags": [
+          "Package"
+        ],
+        "summary": "Create a package",
+        "description": "Create a new package",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/bodies/post/Package"
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Package"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Package"
+        ],
+        "summary": "List packages",
+        "description": "List all packages",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Package"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    },
+    "/packages/{package_id}": {
+      "delete": {
+        "tags": [
+          "Package"
+        ],
+        "summary": "Delete a package",
+        "description": "Delete a specific package",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/package_id"
+          },
+          {
+            "$ref": "#/components/parameters/authentication"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/errors/400"
+          },
+          "500": {
+            "$ref": "#/components/errors/500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "authentication": {
+        "name": "Authentication",
+        "in": "header",
+        "description": "Bearer Token",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "category_id": {
+        "name": "category_id",
+        "in": "path",
+        "description": "Category id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "properties": "uuid"
+        }
+      },
+      "city_id": {
+        "name": "city_id",
+        "in": "path",
+        "description": "City id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "properties": "uuid"
+        }
+      },
+      "account_id": {
+        "name": "account_id",
+        "in": "path",
+        "description": "Account id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "properties": "uuid"
+        }
+      },
+      "administrator_id": {
+        "name": "administrator_id",
+        "in": "path",
+        "description": "Administrator id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "properties": "uuid"
+        }
+      },
+      "essay_id": {
+        "name": "essay_id",
+        "in": "path",
+        "description": "Essay id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "properties": "uuid"
+        }
+      },
+      "package_id": {
+        "name": "package_id",
+        "in": "path",
+        "description": "Package id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "properties": "uuid"
+        }
+      },
+      "page": {
+        "name": "page",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "number"
+        }
+      },
+      "size": {
+        "name": "size",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "number"
+        }
+      },
+      "statusEssay": {
+        "name": "status",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "IN_ANALYSIS",
+            "ACTIVED",
+            "DESACTIVED"
+          ]
+        }
+      },
+      "sortEssay": {
+        "name": "sort",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "created_at:ASC",
+            "created_at:DESC"
+          ]
+        }
+      },
+      "accessToken": {
+        "name": "accessToken",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "bodies": {
+      "post": {
+        "RefreshToken": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "refreshToken"
+                ],
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SignUp": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Fulano Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "teste@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password1!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ConfirmSignUp": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "email",
+                  "code"
+                ],
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "teste@gmail.com"
+                  },
+                  "code": {
+                    "type": "string",
+                    "example": "000000"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SignIn": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "teste@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password1!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Account": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "email",
+                  "phone",
+                  "password"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "teste@gmail.com"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Administrator": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "account_id",
+                  "type"
+                ],
+                "properties": {
+                  "account_id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "GOD",
+                      "HERO"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Category": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "City": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "package_id"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "package_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ForgotPassword": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "email"
+                ],
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "teste@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Subscription": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "category_id"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "category_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ResetPassword": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "password"
+                ],
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "teste@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password1!"
+                  },
+                  "code": {
+                    "type": "string",
+                    "example": "000000"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Essay": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "document"
+                ],
+                "type": "object",
+                "properties": {
+                  "document": {
+                    "type": "object",
+                    "properties": {
+                      "number": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "CPF"
+                        ]
+                      },
+                      "birthday_date": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Session": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Package": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "price",
+                  "expirationDays"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "expirationDays": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "Account": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "new_name",
+                  "new_phone",
+                  "new_email"
+                ],
+                "properties": {
+                  "new_name": {
+                    "type": "string"
+                  },
+                  "new_phone": {
+                    "type": "string"
+                  },
+                  "new_email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Administrator": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "new_type"
+                ],
+                "properties": {
+                  "new_type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Essay": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "new_status"
+                ],
+                "properties": {
+                  "new_status": {
+                    "type": "string",
+                    "enum": [
+                      "IN_ANALYSIS",
+                      "ACTIVED",
+                      "DESACTIVED"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Category": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "new_name"
+                ],
+                "properties": {
+                  "new_name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "City": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "new_name",
+                  "new_package_id"
+                ],
+                "properties": {
+                  "new_name": {
+                    "type": "string"
+                  },
+                  "new_package_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Subscription": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "new_name",
+                  "new_category_id"
+                ],
+                "type": "object",
+                "properties": {
+                  "new_name": {
+                    "type": "string"
+                  },
+                  "new_category_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Package": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "new_name"
+                ],
+                "type": "object",
+                "properties": {
+                  "new_name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "errors": {
+      "400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "subscription": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "accountId": {
+                "type": "string"
+              },
+              "expireAt": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "City": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "package_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "Essay": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "COMPLETED",
+              "RECUSED"
+            ]
+          },
+          "theme": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "Package": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "expirationDays": {
+            "type": "number"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

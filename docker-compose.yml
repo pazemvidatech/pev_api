@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+    container_name: 'pev-postgres'
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: pev,pev_test
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: 'pg-admin'
+    depends_on:
+      - postgres
+    ports:
+      - '5555:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: 'pev-redis'
+    environment:
+      REDIS_PASSWORD: ${CACHE_PASSWORD}
+    ports:
+      - 6379:6379
+
+volumes:
+  postgres-data:
