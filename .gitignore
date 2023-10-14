@@ -1,1 +1,11 @@
 node_modules
+.vscode
+coverage
+.env
+package-lock.json
+dist
+tmp/*
+!tmp/.gitkeep
+!tmp/avatar
+tmp/avatar/*
+!tmp/avatar/.gitkeep
