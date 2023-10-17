@@ -1,7 +1,6 @@
 import IFeatureFlagProvider from '../models/IFeatureFlagProvider'
 import admin from 'firebase-admin'
 import serviceAccount from './serviceAccountKey.json'
-import serviceAccountKeyDev from './serviceAccountKeyDev.json'
 import { ExplicitParameterValue } from 'firebase-admin/lib/remote-config/remote-config-api'
 import { ICreateFeatureFlagDTO } from '../dtos/ICreateFeatureFlagDTO'
 
@@ -11,11 +10,7 @@ class FirebaseMessagingProvider implements IFeatureFlagProvider {
   constructor() {
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert(
-          (process.env.NODE_ENV === 'production'
-            ? serviceAccount
-            : serviceAccountKeyDev) as unknown,
-        ),
+        credential: admin.credential.cert(serviceAccount as unknown),
       })
     }
 

@@ -1,5 +1,8 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions'
 import Account from '../modules/accounts/infra/typeorm/entities/Account'
+import Customer from '../modules/customers/infra/typeorm/entities/Customer'
+import Dependent from '../modules/customers/infra/typeorm/entities/Dependent'
+import Payment from '../modules/payments/infra/typeorm/entities/Payment'
 
 let config: PostgresConnectionOptions
 
@@ -14,7 +17,7 @@ if (process.env.NODE_ENV === 'local') {
     password: process.env.POSTGRES_PASSWORD,
     database: 'postgres',
     subscribers: [],
-    entities: [Account],
+    entities: [Account, Customer, Dependent, Payment],
     migrations: ['src/shared/infra/typeorm/migrations/*.ts'],
     migrationsRun: true,
     migrationsTableName: 'history',
@@ -32,7 +35,7 @@ if (process.env.NODE_ENV === 'local') {
       },
     },
     subscribers: [],
-    entities: [Account],
+    entities: [Account, Customer, Dependent, Payment],
     migrations: ['dist/shared/infra/typeorm/migrations/*.js'],
     migrationsRun: true,
     migrationsTableName: 'history',

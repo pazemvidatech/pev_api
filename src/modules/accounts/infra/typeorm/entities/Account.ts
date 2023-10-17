@@ -1,7 +1,9 @@
+import Payment from '../../../../payments/infra/typeorm/entities/Payment'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
@@ -25,6 +27,9 @@ class Account {
 
   @Column()
   role: number
+
+  @OneToMany(() => Payment, payment => payment.customer)
+  payments: Payment[]
 
   @CreateDateColumn()
   createdAt: Date

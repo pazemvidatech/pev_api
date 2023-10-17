@@ -6,8 +6,6 @@ import { AccountMap } from '@modules/accounts/mapper/AccountMap'
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider'
 import Account from '../infra/typeorm/entities/Account'
 import { Request } from 'express'
-import IFeatureFlagProvider from '@shared/container/providers/FeatureFlagProvider/models/IFeatureFlagProvider'
-import ITransactionRepository from '@modules/transactions/repositories/ITransactionRepository'
 
 @injectable()
 class ProfileAccountUseCase {
