@@ -5,6 +5,7 @@ import Datasource from '@shared/infra/typeorm'
 
 import Customer from '../entities/Customer'
 import { IFindAllCustomersResponseDTO } from '@modules/customers/dtos/IFindAllCustomersDTO'
+import Payment from '@modules/payments/infra/typeorm/entities/Payment'
 
 class CustomerRepository implements ICustomerRepository {
   private ormRepository: Repository<Customer>
@@ -24,6 +25,50 @@ class CustomerRepository implements ICustomerRepository {
     const result = await this.ormRepository.findAndCount(query)
 
     return { data: result[0], total: result[1] }
+  }
+
+  public async findAllDebtors(
+    query: FindManyOptions<Customer> = {},
+    search?: string | undefined,
+  ): Promise<IFindAllCustomersResponseDTO> {
+    const { skip, take } = query
+
+    console.log(search)
+
+    const nameFilter = search
+      ? ` AND LOWER("customers"."name") LIKE LOWER('%${search}%')`
+      : ''
+
+    console.log(nameFilter)
+
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth() + 1 // getMonth() retorna o mês de 0 a 11, então adicionamos 1 para obter de 1 a 12
+
+    const data = await this.ormRepository.query(`
+      SELECT "customers".*, 
+        (${currentYear} - MAX("payments"."year")) * 12 + ${currentMonth} - MAX("payments"."month") AS "paymentCount"
+      FROM "customers"
+      LEFT JOIN "payments" ON "payments"."customerId" = "customers"."id"
+      WHERE 1 = 1 ${nameFilter}
+      GROUP BY "customers"."id"
+      HAVING (${currentYear} - MAX("payments"."year")) * 12 + ${currentMonth} - MAX("payments"."month") >= 2
+      ORDER BY "paymentCount" DESC
+      LIMIT ${take} OFFSET ${skip}
+    `)
+
+    const total = await this.ormRepository.query(`
+      SELECT COUNT(*) AS "count"
+      FROM (
+        SELECT 1
+        FROM "customers"
+        LEFT JOIN "payments" ON "payments"."customerId" = "customers"."id"
+        WHERE 1 = 1 ${nameFilter}
+        GROUP BY "customers"."id"
+        HAVING (${currentYear} - MAX("payments"."year")) * 12 + ${currentMonth} - MAX("payments"."month") >= 2
+      ) AS "sub"
+    `)
+
+    return { data, total: Number(total[0].count) }
   }
 
   async findByCode(code: string): Promise<Customer | undefined> {

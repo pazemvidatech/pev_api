@@ -48,12 +48,21 @@ class Customer {
   })
   dependents: Dependent[]
 
-  @OneToMany(() => Payment, payment => payment.customer)
+  @OneToMany(() => Payment, payment => payment.customer, {
+    cascade: true,
+  })
   payments: Payment[]
 
   @Expose({ name: 'numberDependents' })
   numberDependents(): number {
-    return this.dependents.length
+    if (this.dependents != null) {
+      return this.dependents.length
+    }
+  }
+
+  @Expose({ name: 'paymentCount' })
+  paymentCount(): number {
+    return 0
   }
 
   @CreateDateColumn()

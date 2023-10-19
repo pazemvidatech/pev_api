@@ -10,6 +10,8 @@ export interface IFindAllPaymentsDTO {
   }
   take: number
   skip: number
+  month?: number | undefined
+  year?: number | undefined
 }
 
 export interface IFindAllPaymentsResponseDTO {

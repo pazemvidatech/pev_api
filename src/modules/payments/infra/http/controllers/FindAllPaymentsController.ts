@@ -10,12 +10,14 @@ interface IRequest {
   }
   page: number
   size: number
+  month?: number | undefined
+  year?: number | undefined
   sort: SortQueryType
 }
 
 class FindAllPaymentsController {
   async handle(req: Request, res: Response): Promise<Response> {
-    const { sort, page, size, accountId } = req.query
+    const { sort, page, size, accountId, month, year } = req.query
 
     const findAllPayments = container.resolve(FindAllPaymentsUseCase)
 
@@ -25,6 +27,8 @@ class FindAllPaymentsController {
     if (sort) query.sort = sort as SortQueryType
     if (page) query.page = Number(page)
     if (size) query.size = Number(size)
+    if (month) query.month = Number(month)
+    if (year) query.year = Number(year)
 
     const payments = await findAllPayments.execute(query)
 

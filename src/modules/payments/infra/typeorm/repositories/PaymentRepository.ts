@@ -95,24 +95,47 @@ class PaymentRepository implements IPaymentRepository {
     return Payment
   }
 
-  public async findByAccountId(
-    accountId: string,
-  ): Promise<Payment | undefined> {
-    const Payment = await this.ormRepository.findOne({
-      where: { accountId },
+  public async findAllByCustomerId(customerId: string): Promise<Payment[]> {
+    const payments = await this.ormRepository.find({
+      where: { customerId },
     })
 
-    return Payment
+    return payments
   }
 
   public async findAll(
     query: IFindAllPaymentsDTO,
   ): Promise<IFindAllPaymentsResponseDTO> {
-    const payments = await this.ormRepository.findAndCount(query)
+    const { month, year, order, skip, take, where } = query
+
+    const qb = this.ormRepository
+      .createQueryBuilder('payment')
+      .skip(skip)
+      .take(take)
+
+    if (where?.accountId) {
+      qb.andWhere('payment.accountId = :accountId', {
+        accountId: where.accountId,
+      })
+    }
+
+    if (month) {
+      qb.andWhere(`EXTRACT(MONTH FROM payment."createdAt") = :month`, { month })
+    }
+
+    if (year) {
+      qb.andWhere(`EXTRACT(YEAR FROM payment."createdAt") = :year`, { year })
+    }
+
+    if (order) {
+      qb.orderBy(`payment.${Object.keys(order)[0]}`, Object.values(order)[0])
+    }
+
+    const [data, total] = await qb.getManyAndCount()
 
     return {
-      data: classToPlain(payments[0]) as Payment[],
-      total: payments[1],
+      data: classToPlain(data) as Payment[],
+      total,
     }
   }
 

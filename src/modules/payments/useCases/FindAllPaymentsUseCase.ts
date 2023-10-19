@@ -14,6 +14,8 @@ interface IRequest {
   }
   page: number
   size: number
+  month?: number | undefined
+  year?: number | undefined
   sort: SortQueryType
 }
 
@@ -32,11 +34,13 @@ class FindAllPaymentsUseCase {
   ) {}
 
   public async execute(data: IRequest): Promise<IResponse> {
-    const { page, size, sort, where } = data
+    const { page, size, sort, where, month, year } = data
     const { accountId } = where
 
     const queryData = {} as IFindAllPaymentsDTO
 
+    queryData.month = month
+    queryData.year = year
     queryData.take = size
     queryData.skip = (page - 1) * size
 
@@ -48,6 +52,8 @@ class FindAllPaymentsUseCase {
     queryData.order = { [sortBy]: orderBy }
 
     if (accountId) queryData.where = { accountId }
+
+    console.log(queryData)
 
     const result = await this.paymentRepository.findAll(queryData)
 

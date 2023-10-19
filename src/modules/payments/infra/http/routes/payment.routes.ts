@@ -7,12 +7,14 @@ import { arraySorts } from '@modules/payments/types/SortQueryType'
 import ensureSeller from '@shared/infra/http/middlewares/ensureSeller'
 import ensureAdmin from '@shared/infra/http/middlewares/ensureAdmin'
 import FindAllPaymentsFilterSellerController from '../controllers/FindAllPaymentsFilterSellerController'
+import FindPaymentsCustomerController from '../controllers/FindPaymentsCustomerController'
 
 const paymentRoutes = Router()
 const createPaymentController = new CreatePaymentController()
 const deletePaymentController = new DeletePaymentController()
 const findAllPaymentsController = new FindAllPaymentsController()
 const findAllPaymentsFilterSellerController = new FindAllPaymentsFilterSellerController()
+const findPaymentsCustomerController = new FindPaymentsCustomerController()
 
 paymentRoutes.get(
   '/',
@@ -25,14 +27,27 @@ paymentRoutes.get(
         .default('createdAt:DESC'),
       page: Joi.number().optional().default(1),
       size: Joi.number().optional().default(10),
+      month: Joi.number().min(1).max(12).optional(),
+      year: Joi.number().min(2023).optional(),
       accountId: Joi.string().uuid().optional(),
     }).unknown(false),
   }),
   findAllPaymentsController.handle,
 )
 
+paymentRoutes.delete(
+  '/:paymentId',
+  ensureAdmin,
+  celebrate({
+    [Segments.PARAMS]: {
+      paymentId: Joi.string().uuid().required(),
+    },
+  }),
+  deletePaymentController.handle,
+)
+
 paymentRoutes.get(
-  '/filterSeller',
+  '/forSeller',
   ensureSeller,
   celebrate({
     [Segments.QUERY]: Joi.object({
@@ -42,9 +57,22 @@ paymentRoutes.get(
         .default('createdAt:DESC'),
       page: Joi.number().optional().default(1),
       size: Joi.number().optional().default(10),
+      month: Joi.number().min(1).max(12).optional(),
+      year: Joi.number().min(2023).optional(),
     }).unknown(false),
   }),
   findAllPaymentsFilterSellerController.handle,
+)
+
+paymentRoutes.get(
+  '/customer/:customerId',
+  ensureAdmin,
+  celebrate({
+    [Segments.PARAMS]: {
+      customerId: Joi.string().uuid().required(),
+    },
+  }),
+  findPaymentsCustomerController.handle,
 )
 
 paymentRoutes.use(ensureSeller)
@@ -58,16 +86,6 @@ paymentRoutes.post(
     },
   }),
   createPaymentController.handle,
-)
-
-paymentRoutes.delete(
-  '/:paymentId',
-  celebrate({
-    [Segments.PARAMS]: {
-      paymentId: Joi.string().uuid().required(),
-    },
-  }),
-  deletePaymentController.handle,
 )
 
 export default paymentRoutes
