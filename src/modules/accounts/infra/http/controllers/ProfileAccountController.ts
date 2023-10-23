@@ -9,7 +9,6 @@ class ProfileAccountController {
 
     const profile = await profileAccountUseCase.execute(request.account)
 
-    delete profile.terms
     return response.json(profile)
   }
 }

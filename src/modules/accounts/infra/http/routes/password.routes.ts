@@ -17,7 +17,7 @@ passwordRoutes.post(
   '/reset',
   celebrate({
     [Segments.BODY]: {
-      email: Joi.string().email().required(),
+      username: Joi.string().required(),
       password: Joi.string().trim().regex(regex.password).required(),
       code: Joi.string().trim().regex(regex.code).required(),
     },
@@ -29,7 +29,7 @@ passwordRoutes.post(
   '/forgot',
   celebrate({
     [Segments.BODY]: {
-      email: Joi.string().email().required(),
+      username: Joi.string().required(),
     },
   }),
   forgotPasswordController.handle,

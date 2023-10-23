@@ -5,11 +5,11 @@ import ForgotPasswordUseCase from '../../../useCases/ForgotPasswordUseCase'
 
 class ForgotPasswordAccountController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { email } = request.body
+    const { username } = request.body
     const resetPasswordAccountUseCase = container.resolve(ForgotPasswordUseCase)
 
     await resetPasswordAccountUseCase.execute({
-      email,
+      username,
     })
 
     return response.status(204).send()

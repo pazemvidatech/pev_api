@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError'
 import IAuthenticationProvider from '@shared/container/providers/AuthenticationProvider/models/IAuthenticationProvider'
 
 interface IRequest {
-  email: string
+  username: string
 }
 
 @injectable()
@@ -14,9 +14,9 @@ class ForgotPasswordUseCase {
     private authProvider: IAuthenticationProvider,
   ) {}
 
-  async execute({ email }: IRequest): Promise<void> {
+  async execute({ username }: IRequest): Promise<void> {
     try {
-      await this.authProvider.forgotPassword(email)
+      await this.authProvider.forgotPassword(username)
     } catch (error) {
       throw new AppError(error.message, error.statusCode)
     }

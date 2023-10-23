@@ -5,7 +5,7 @@ import IAuthenticationProvider from '@shared/container/providers/AuthenticationP
 
 interface IRequest {
   code: string
-  email: string
+  username: string
   password: string
 }
 
@@ -16,9 +16,13 @@ class ResetPasswordUseCase {
     private authProvider: IAuthenticationProvider,
   ) {}
 
-  async execute({ email, code, password }: IRequest): Promise<void> {
+  async execute({ username, code, password }: IRequest): Promise<void> {
     try {
-      await this.authProvider.newPassword({ username: email, code, password })
+      await this.authProvider.newPassword({
+        username: username,
+        code,
+        password,
+      })
     } catch (error) {
       throw new AppError(error.message, error.statusCode)
     }

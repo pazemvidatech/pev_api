@@ -5,11 +5,11 @@ import ResetPasswordUseCase from '../../../useCases/ResetPasswordUseCase'
 
 class ResetPasswordAccountController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { email, password, code } = request.body
+    const { username, password, code } = request.body
     const resetPasswordAccountUseCase = container.resolve(ResetPasswordUseCase)
 
     await resetPasswordAccountUseCase.execute({
-      email,
+      username,
       code: String(code),
       password,
     })
