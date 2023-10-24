@@ -34,7 +34,12 @@ Sentry.init(app)
 // routes
 app.use('/v1', routes)
 
-app.use(cors())
+app.use(
+  cors({
+    origin: ['http://localhost:8200', 'http://127.0.0.1:8200'],
+    credentials: true,
+  }),
+)
 
 app.use(errors({ statusCode: 422 }))
 
