@@ -7,7 +7,7 @@ import {
 import { IFindAllCustomersDTO } from '../dtos/IFindAllCustomersDTO'
 import { injectable, inject } from 'tsyringe'
 import Customer from '../infra/typeorm/entities/Customer'
-import { FindOperator, Like } from 'typeorm'
+import { FindOperator, ILike } from 'typeorm'
 import { classToPlain, plainToClass } from 'class-transformer'
 
 interface IRequest {
@@ -44,7 +44,7 @@ class FindAllCustomersUseCase {
     if (where) queryData.where = {}
 
     if (where.name) {
-      queryData.where.name = Like('%' + where.name + '%')
+      queryData.where.name = ILike('%' + where.name + '%')
     }
 
     const [sortBy, orderBy] = sort.split(':') as [
