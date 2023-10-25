@@ -12,6 +12,7 @@ import Sentry from './factories/sentryFactory'
 import '@shared/container'
 
 const app = express()
+app.use(cors())
 
 // middlewares
 app.use(rateLimiterMiddleware)
@@ -31,25 +32,10 @@ app.use((req, res) => {
 // Sentry
 Sentry.init(app)
 
-const options: cors.CorsOptions = {
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'X-Access-Token',
-  ],
-  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-  origin: ['http://localhost:8200', 'http://127.0.0.1:8200'],
-  credentials: true,
-}
-
-app.use(cors(options))
-
 // routes
 app.use('/v1', routes)
 
-app.options('*', cors(options))
+app.options('*', cors())
 
 app.use(errors({ statusCode: 422 }))
 
