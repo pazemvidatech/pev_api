@@ -35,7 +35,7 @@ class CognitoProvider implements IAuthenticationProvider {
       UserAttributes: userAttr,
       DesiredDeliveryMediums: ['EMAIL'],
       ForceAliasCreation: false,
-      TemporaryPassword: 'Password1!',
+      //TemporaryPassword: 'Password1!',
     }
 
     try {
