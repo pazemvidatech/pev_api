@@ -49,7 +49,7 @@ class CreateCustomerUseCase {
         const codeGenerated = makeCode(8)
 
         const checkExistsTicketCode = await this.customerRepository.findByCode(
-          code,
+          codeGenerated,
         )
 
         if (!checkExistsTicketCode) code = codeGenerated
