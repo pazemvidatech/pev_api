@@ -1,3 +1,5 @@
+import Dependent from '../infra/typeorm/entities/Dependent'
+
 export interface IUpdateCustomerRequestDTO {
   name: string
   email?: string | undefined
@@ -6,4 +8,5 @@ export interface IUpdateCustomerRequestDTO {
   address: string
   payday: number
   numberId: string
+  dependents: Dependent[]
 }

@@ -90,34 +90,6 @@ class CustomerRepository implements ICustomerRepository {
   }
 
   async save(customer: Customer): Promise<Customer> {
-    const dependents = customer.dependents
-
-    const customData = await this.ormRepository.findOneBy({ id: customer.id })
-    const dependentsData = customData.dependents.map(e => e.id)
-
-    const dependentesComIDs = dependents.map(dependent => {
-      if (dependent.id) {
-        return dependent
-      } else {
-        return {
-          id: uuidV4(),
-          ...dependent,
-        }
-      }
-    })
-
-    const dependentsToRemove = customer.dependents.map(e =>
-      dependentsData.includes(e.id) ? undefined : e,
-    )
-    customer.dependents = dependentesComIDs
-
-    await this.ormDependentRepository
-      .createQueryBuilder()
-      .delete()
-      .from(Dependent)
-      .where('id IN (:...ids)', { ids: dependentsToRemove })
-      .execute()
-
     return await this.ormRepository.save(customer)
   }
 }
