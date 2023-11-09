@@ -5,6 +5,7 @@ import Datasource from '@shared/infra/typeorm'
 import { v4 as uuidV4 } from 'uuid'
 import Customer from '../entities/Customer'
 import { IFindAllCustomersResponseDTO } from '@modules/customers/dtos/IFindAllCustomersDTO'
+import Dependent from '../entities/Dependent'
 
 class CustomerRepository implements ICustomerRepository {
   private ormRepository: Repository<Customer>
@@ -89,6 +90,9 @@ class CustomerRepository implements ICustomerRepository {
   async save(customer: Customer): Promise<Customer> {
     const dependents = customer.dependents
 
+    const customData = await this.ormRepository.findOneBy({ id: customer.id })
+    const dependentsData = customData.dependents.map(e => e.id)
+
     const dependentesComIDs = dependents.map(dependent => {
       if (dependent.id) {
         return dependent
@@ -100,7 +104,17 @@ class CustomerRepository implements ICustomerRepository {
       }
     })
 
+    const dependentsToRemove = customer.dependents.map(e =>
+      dependentsData.includes(e.id) ? undefined : e,
+    )
     customer.dependents = dependentesComIDs
+
+    await this.ormRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Dependent)
+      .where('id IN (:...ids)', { ids: dependentsToRemove })
+      .execute()
 
     return await this.ormRepository.save(customer)
   }
