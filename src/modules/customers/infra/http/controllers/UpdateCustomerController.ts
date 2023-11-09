@@ -13,6 +13,7 @@ export default class UpdateCustomerController {
       email,
       document,
       payday,
+      dependents,
     } = req.body
 
     const { customerId } = req.params
@@ -28,6 +29,7 @@ export default class UpdateCustomerController {
       email,
       document,
       payday: Number(payday),
+      dependents: dependents,
     })
 
     return res.status(202).send()

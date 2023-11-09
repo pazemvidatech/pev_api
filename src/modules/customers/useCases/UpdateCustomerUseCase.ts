@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import ICustomerRepository from '../repositories/ICustomerRepository'
 import AppError from '@shared/errors/AppError'
+import Dependent from '../infra/typeorm/entities/Dependent'
 
 interface IRequest {
   customerId: string
@@ -12,6 +13,7 @@ interface IRequest {
   address: string
   payday: number
   numberId: string
+  dependents: Dependent[]
 }
 
 @injectable()
@@ -30,6 +32,7 @@ class UpdateCustomerUseCase {
     email,
     document,
     payday,
+    dependents,
   }: IRequest): Promise<void> {
     const customer = await this.customerRepository.findById(customerId)
 
@@ -44,6 +47,7 @@ class UpdateCustomerUseCase {
     if (email) customer.email = email
     if (document) customer.document = document
     if (payday) customer.payday = payday
+    if (dependents) customer.dependents = dependents
 
     await this.customerRepository.save(customer)
   }

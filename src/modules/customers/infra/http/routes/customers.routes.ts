@@ -97,6 +97,17 @@ customersRoutes.put(
       silverPlan: Joi.boolean().default(false).optional(),
       email: Joi.string().email().optional(),
       document: Joi.string().trim().optional(),
+      dependents: Joi.array()
+        .items(
+          Joi.object()
+            .keys({
+              id: Joi.string().uuid().required(),
+              name: Joi.string().trim().required(),
+              deathDate: Joi.date().optional(),
+            })
+            .unknown(false),
+        )
+        .optional(),
     }).unknown(false),
   }),
   updateCustomerController.handle,
