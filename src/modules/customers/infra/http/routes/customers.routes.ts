@@ -101,7 +101,7 @@ customersRoutes.put(
         .items(
           Joi.object()
             .keys({
-              id: Joi.string().uuid().required(),
+              id: Joi.string().uuid().optional(),
               name: Joi.string().trim().required(),
               deathDate: Joi.date().optional(),
             })
