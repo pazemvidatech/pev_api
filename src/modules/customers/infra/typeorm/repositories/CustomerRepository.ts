@@ -9,8 +9,10 @@ import Dependent from '../entities/Dependent'
 
 class CustomerRepository implements ICustomerRepository {
   private ormRepository: Repository<Customer>
+  private ormDependentRepository: Repository<Dependent>
   constructor() {
     this.ormRepository = Datasource.getRepository(Customer)
+    this.ormDependentRepository = Datasource.getRepository(Dependent)
   }
 
   async create(customerData: ICreateCustomerRequestDTO): Promise<Customer> {
@@ -109,7 +111,7 @@ class CustomerRepository implements ICustomerRepository {
     )
     customer.dependents = dependentesComIDs
 
-    await this.ormRepository
+    await this.ormDependentRepository
       .createQueryBuilder()
       .delete()
       .from(Dependent)
