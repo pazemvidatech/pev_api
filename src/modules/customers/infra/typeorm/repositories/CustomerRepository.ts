@@ -2,10 +2,9 @@ import { ICreateCustomerRequestDTO } from '@modules/customers/dtos/ICreateCustom
 import ICustomerRepository from '@modules/customers/repositories/ICustomerRepository'
 import { FindManyOptions, Repository } from 'typeorm'
 import Datasource from '@shared/infra/typeorm'
-
+import { v4 as uuidV4 } from 'uuid'
 import Customer from '../entities/Customer'
 import { IFindAllCustomersResponseDTO } from '@modules/customers/dtos/IFindAllCustomersDTO'
-import Payment from '@modules/payments/infra/typeorm/entities/Payment'
 
 class CustomerRepository implements ICustomerRepository {
   private ormRepository: Repository<Customer>
@@ -88,6 +87,21 @@ class CustomerRepository implements ICustomerRepository {
   }
 
   async save(customer: Customer): Promise<Customer> {
+    const dependents = customer.dependents
+
+    const dependentesComIDs = dependents.map(dependent => {
+      if (dependent.id) {
+        return dependent
+      } else {
+        return {
+          id: uuidV4(),
+          ...dependent,
+        }
+      }
+    })
+
+    customer.dependents = dependentesComIDs
+
     return await this.ormRepository.save(customer)
   }
 }
