@@ -4,10 +4,10 @@ import IPaymentRepository from '@modules/payments/repositories/IPaymentRepositor
 
 import Payment from '../entities/Payment'
 import ICreatePaymentDTO from '@modules/payments/dtos/ICreatePaymentDTO'
-import Account from '@modules/accounts/infra/typeorm/entities/Account'
 import {
   IFindAllPaymentsDTO,
   IFindAllPaymentsResponseDTO,
+  PaymentList,
 } from '@modules/payments/dtos/IFindAllPaymentsDTO'
 import { classToPlain } from 'class-transformer'
 
@@ -87,12 +87,40 @@ class PaymentRepository implements IPaymentRepository {
     return lastPayment
   }
 
-  public async findById(id: string): Promise<Payment | undefined> {
-    const Payment = await this.ormRepository.findOne({
-      where: { id },
-    })
+  public async findById(id: string): Promise<PaymentList | undefined> {
+    const result = await this.ormRepository
+      .createQueryBuilder('payment')
+      .select([
+        'payment.id',
+        'payment.month',
+        'payment.year',
+        'payment.amount',
+        'payment.createdAt',
+        'customer.name AS customerName',
+        'account.name AS accountName',
+      ])
+      .leftJoin('payment.customer', 'customer')
+      .leftJoin('payment.account', 'account')
+      .where('payment.id = :id', { id })
+      .getRawOne()
 
-    return Payment
+    if (!result) {
+      return undefined
+    }
+
+    console.log(result)
+
+    const camelCaseData = {
+      id: result.payment_id,
+      month: result.payment_month,
+      year: result.payment_year,
+      amount: result.payment_amount,
+      createdAt: result.payment_createdAt,
+      customerName: result.customername,
+      accountName: result.accountname,
+    }
+
+    return camelCaseData
   }
 
   public async findAllByCustomerId(customerId: string): Promise<Payment[]> {
@@ -110,13 +138,29 @@ class PaymentRepository implements IPaymentRepository {
 
     const qb = this.ormRepository
       .createQueryBuilder('payment')
-      .skip(skip)
-      .take(take)
+      .select([
+        'payment.id',
+        'payment.month',
+        'payment.year',
+        'payment.amount',
+        'payment.createdAt',
+        'customer.name AS customerName',
+        'account.name AS accountName',
+      ])
+      .leftJoin('payment.customer', 'customer')
+      .leftJoin('payment.account', 'account')
 
     if (where?.accountId) {
       qb.andWhere('payment.accountId = :accountId', {
         accountId: where.accountId,
       })
+
+      // Obter a contagem total de pagamentos que correspondem à condição da conta.
+      const total = await qb.getCount()
+      console.log('Total de pagamentos:', total)
+
+      // Aplicar paginação após obter a contagem.
+      qb.skip(skip).take(take)
     }
 
     if (month) {
@@ -131,11 +175,21 @@ class PaymentRepository implements IPaymentRepository {
       qb.orderBy(`payment.${Object.keys(order)[0]}`, Object.values(order)[0])
     }
 
-    const [data, total] = await qb.getManyAndCount()
+    const data = await qb.getRawMany()
+
+    const camelCaseData = data.map(result => ({
+      id: result.payment_id,
+      month: result.payment_month,
+      year: result.payment_year,
+      amount: result.payment_amount,
+      createdAt: result.payment_createdAt,
+      customerName: result.customername,
+      accountName: result.accountname,
+    }))
 
     return {
-      data: classToPlain(data) as Payment[],
-      total,
+      data: camelCaseData,
+      total: data.length,
     }
   }
 

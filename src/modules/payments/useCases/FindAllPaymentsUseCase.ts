@@ -4,9 +4,8 @@ import {
   ColumnSortType,
   OrderQueryType,
 } from '../types/SortQueryType'
-import { IFindAllPaymentsDTO } from '../dtos/IFindAllPaymentsDTO'
+import { IFindAllPaymentsDTO, PaymentList } from '../dtos/IFindAllPaymentsDTO'
 import { injectable, inject } from 'tsyringe'
-import Payment from '../infra/typeorm/entities/Payment'
 
 interface IRequest {
   where?: {
@@ -23,7 +22,7 @@ interface IResponse {
   size: number
   page: number
   total: number
-  data: Payment[]
+  data: PaymentList[]
 }
 
 @injectable()
@@ -56,6 +55,8 @@ class FindAllPaymentsUseCase {
     console.log(queryData)
 
     const result = await this.paymentRepository.findAll(queryData)
+
+    console.log(result)
 
     return {
       size,

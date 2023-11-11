@@ -15,6 +15,16 @@ export interface IFindAllPaymentsDTO {
 }
 
 export interface IFindAllPaymentsResponseDTO {
-  data: Payment[]
+  data: PaymentList[]
   total: number
+}
+
+export interface PaymentList {
+  id: string
+  month: number
+  year: number
+  amount: number
+  createdAt: Date
+  customerName: string
+  accountName: string
 }

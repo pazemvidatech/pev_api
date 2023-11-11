@@ -8,8 +8,10 @@ import ensureSeller from '@shared/infra/http/middlewares/ensureSeller'
 import ensureAdmin from '@shared/infra/http/middlewares/ensureAdmin'
 import FindAllPaymentsFilterSellerController from '../controllers/FindAllPaymentsFilterSellerController'
 import FindPaymentsCustomerController from '../controllers/FindPaymentsCustomerController'
+import ShowPaymentController from '../controllers/ShowPaymentController'
 
 const paymentRoutes = Router()
+const showPaymentController = new ShowPaymentController()
 const createPaymentController = new CreatePaymentController()
 const deletePaymentController = new DeletePaymentController()
 const findAllPaymentsController = new FindAllPaymentsController()
@@ -33,6 +35,17 @@ paymentRoutes.get(
     }).unknown(false),
   }),
   findAllPaymentsController.handle,
+)
+
+paymentRoutes.get(
+  '/:paymentId',
+  ensureSeller,
+  celebrate({
+    [Segments.PARAMS]: {
+      paymentId: Joi.string().uuid().required(),
+    },
+  }),
+  showPaymentController.handle,
 )
 
 paymentRoutes.delete(
