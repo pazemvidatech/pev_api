@@ -3,6 +3,7 @@ import Payment from '../infra/typeorm/entities/Payment'
 import IPaymentRepository from '../repositories/IPaymentRepository'
 import { injectable, inject } from 'tsyringe'
 import ICustomerRepository from '@modules/customers/repositories/ICustomerRepository'
+import AppError from '@shared/errors/AppError'
 
 interface IRequest {
   customerId: string
@@ -30,6 +31,10 @@ class CreatePaymentUseCase {
   }: IRequest): Promise<Payment[]> {
     const customer = await this.customerRepository.findById(customerId)
 
+    if (!customer) {
+      throw new AppError('Customer not found', 404)
+    }
+
     let keyAmount: string
 
     if (customer.silverPlan) {
@@ -38,13 +43,9 @@ class CreatePaymentUseCase {
       keyAmount = 'normalAmount'
     }
 
-    console.log(keyAmount)
-
     const amount = (await this.featureFlagProvider.getConfig(
       keyAmount,
     )) as number
-
-    console.log(amount)
 
     const payments = await this.paymentRepository.create({
       customerId,

@@ -62,9 +62,9 @@ class PaymentRepository implements IPaymentRepository {
         newPayment.accountId = accountId
 
         paymentsToCreate.push(newPayment)
-      }
 
-      await entityManager.save(paymentsToCreate)
+        await entityManager.save(newPayment)
+      }
 
       return paymentsToCreate
     })
@@ -108,8 +108,6 @@ class PaymentRepository implements IPaymentRepository {
       return undefined
     }
 
-    console.log(result)
-
     const camelCaseData = {
       id: result.payment_id,
       month: result.payment_month,
@@ -121,6 +119,12 @@ class PaymentRepository implements IPaymentRepository {
     }
 
     return camelCaseData
+  }
+
+  public async findEntityById(id: string): Promise<Payment | undefined> {
+    const result = await this.ormRepository.findOne({ where: { id } })
+
+    return result
   }
 
   public async findAllByCustomerId(customerId: string): Promise<Payment[]> {
@@ -154,22 +158,23 @@ class PaymentRepository implements IPaymentRepository {
       qb.andWhere('payment.accountId = :accountId', {
         accountId: where.accountId,
       })
-
-      // Obter a contagem total de pagamentos que correspondem à condição da conta.
-      const total = await qb.getCount()
-      console.log('Total de pagamentos:', total)
-
-      // Aplicar paginação após obter a contagem.
-      qb.skip(skip).take(take)
     }
 
     if (month) {
-      qb.andWhere(`EXTRACT(MONTH FROM payment."createdAt") = :month`, { month })
+      qb.andWhere(`EXTRACT(MONTH FROM payment."createdAt") = :month`, {
+        month,
+      })
     }
 
     if (year) {
       qb.andWhere(`EXTRACT(YEAR FROM payment."createdAt") = :year`, { year })
     }
+
+    // Obter a contagem total de pagamentos que correspondem à condição da conta.
+    const total = await qb.getCount()
+
+    // Aplicar paginação após obter a contagem.
+    qb.skip(skip).take(take)
 
     if (order) {
       qb.orderBy(`payment.${Object.keys(order)[0]}`, Object.values(order)[0])
@@ -189,7 +194,7 @@ class PaymentRepository implements IPaymentRepository {
 
     return {
       data: camelCaseData,
-      total: data.length,
+      total,
     }
   }
 

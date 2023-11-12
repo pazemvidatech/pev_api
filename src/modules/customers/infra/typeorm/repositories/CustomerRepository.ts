@@ -35,13 +35,9 @@ class CustomerRepository implements ICustomerRepository {
   ): Promise<IFindAllCustomersResponseDTO> {
     const { skip, take } = query
 
-    console.log(search)
-
     const nameFilter = search
       ? ` AND LOWER("customers"."name") LIKE LOWER('%${search}%')`
       : ''
-
-    console.log(nameFilter)
 
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1 // getMonth() retorna o mês de 0 a 11, então adicionamos 1 para obter de 1 a 12

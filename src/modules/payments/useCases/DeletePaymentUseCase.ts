@@ -11,7 +11,7 @@ class DeletePaymentUseCase {
   ) {}
 
   public async execute(id: string, account: Request['account']): Promise<void> {
-    const payment = await this.paymentRepository.findById(id)
+    const payment = await this.paymentRepository.findEntityById(id)
 
     if (account.id != payment.accountId && account.role != 1) {
       throw new AppError('Not permission', 403)

@@ -38,8 +38,6 @@ class UpdateCustomerUseCase {
 
     if (!customer) throw new AppError('Customer not found', 404)
 
-    console.log(customer)
-
     if (name) customer.name = name
     if (silverPlan) customer.silverPlan = silverPlan
     if (numberId) customer.numberId = numberId

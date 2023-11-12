@@ -13,8 +13,6 @@ class DeleteDependentUseCase {
   async execute(dependentId: string): Promise<void> {
     const dependent = await this.dependentRepository.findById(dependentId)
 
-    console.log(dependent)
-
     if (!dependent) throw new AppError('Dependent not found', 404)
 
     await this.dependentRepository.remove(dependent)
