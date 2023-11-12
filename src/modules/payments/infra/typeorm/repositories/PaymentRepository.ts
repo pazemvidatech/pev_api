@@ -54,17 +54,21 @@ class PaymentRepository implements IPaymentRepository {
           newYear++
         }
 
+        const now = new Date()
+
+        now.setSeconds(now.getSeconds() + i)
+
         const newPayment = new Payment()
         newPayment.month = newMonth
         newPayment.year = newYear
         newPayment.amount = Number(amount)
         newPayment.customerId = customerId
         newPayment.accountId = accountId
-
+        newPayment.createdAt = now
         paymentsToCreate.push(newPayment)
-
-        await entityManager.save(newPayment)
       }
+
+      await entityManager.save(paymentsToCreate)
 
       return paymentsToCreate
     })
