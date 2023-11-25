@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { container } from 'tsyringe'
 
 import FindAllCitiesUseCase from '../../../useCases/FindAllCitiesUseCase'
+import { CityMap } from '@modules/cities/mapper/CityMap'
 
 interface IRequest {
   page: number
@@ -18,9 +19,16 @@ class FindAllCitiesController {
     if (page) query.page = Number(page)
     if (size) query.size = Number(size)
 
-    const cities = await findAllCities.execute(query)
+    const result = await findAllCities.execute(query)
 
-    return res.json(cities)
+    const cities = result.data.map(city => CityMap.toDTO(city))
+
+    delete result.data
+
+    return res.json({
+      data: cities,
+      ...result,
+    })
   }
 }
 

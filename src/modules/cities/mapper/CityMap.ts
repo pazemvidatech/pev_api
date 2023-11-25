@@ -1,22 +1,13 @@
 import { classToClass } from 'class-transformer'
 
-import { IProfileCityResponseDTO } from '../dtos/IProfileCityDTO'
 import City from '../infra/typeorm/entities/City'
+import { IFindAllDataCitiesDTO } from '../dtos/IFindAllDataCitiesDTO'
 
 export class CityMap {
-  static toDTO({
-    id,
-    email,
-    name,
-    username,
-    role,
-  }: City): IProfileCityResponseDTO {
+  static toDTO({ id, name }: City): IFindAllDataCitiesDTO {
     const city = classToClass({
       id,
       name,
-      email,
-      username,
-      role,
     })
     return city
   }
