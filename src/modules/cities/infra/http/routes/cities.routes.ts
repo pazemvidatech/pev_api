@@ -26,7 +26,16 @@ cityRoutes.post(
   createCityController.handle,
 )
 
-cityRoutes.get('/', findAllCitiesController.handle)
+cityRoutes.get(
+  '/',
+  celebrate({
+    [Segments.QUERY]: Joi.object({
+      page: Joi.number().optional().default(1),
+      size: Joi.number().optional().default(30),
+    }).unknown(false),
+  }),
+  findAllCitiesController.handle,
+)
 
 cityRoutes.put(
   '/:cityId',

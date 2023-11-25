@@ -10,7 +10,7 @@ interface IRequest {
 
 class FindAllCitiesController {
   async handle(req: Request, res: Response): Promise<Response> {
-    const { sort, page, size, search } = req.query
+    const { page, size } = req.query
     const findAllCities = container.resolve(FindAllCitiesUseCase)
 
     const query = <IRequest>{}
