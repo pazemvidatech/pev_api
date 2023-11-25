@@ -6,6 +6,7 @@ export interface IUpdateCustomerRequestDTO {
   document?: string | undefined
   silverPlan: boolean
   address: string
+  cityId: string
   payday: number
   numberId: string
   dependents: Dependent[]

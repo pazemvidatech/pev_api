@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe'
 import AppError from '@shared/errors/AppError'
 import ICustomerRepository from '../repositories/ICustomerRepository'
 import { ICreateDependentRequestDTO } from '../dtos/ICreateCustomerDTO'
+import ICityRepository from '@modules/cities/repositories/ICityRepository'
 
 interface IRequest {
   name: string
@@ -10,6 +11,7 @@ interface IRequest {
   document?: string | undefined
   silverPlan: boolean
   address: string
+  cityId: string
   payday: number
   numberId: string
   dependents: ICreateDependentRequestDTO[]
@@ -28,6 +30,9 @@ function makeCode(length: number) {
 @injectable()
 class CreateCustomerUseCase {
   constructor(
+    @inject('CityRepository')
+    private cityRepository: ICityRepository,
+
     @inject('CustomerRepository')
     private customerRepository: ICustomerRepository,
   ) {}
@@ -38,10 +43,15 @@ class CreateCustomerUseCase {
     numberId,
     address,
     email,
+    cityId,
     document,
     payday,
     dependents,
   }: IRequest): Promise<void> {
+    const city = await this.cityRepository.findById(cityId)
+
+    if (!city) throw new AppError('City not found', 404)
+
     try {
       let code: string
 
@@ -62,6 +72,7 @@ class CreateCustomerUseCase {
         numberId,
         address,
         email,
+        cityId,
         document,
         payday,
         dependents,

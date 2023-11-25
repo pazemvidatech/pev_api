@@ -31,6 +31,7 @@ customersRoutes.post(
       payday: Joi.number().min(1).max(31).required(),
       silverPlan: Joi.boolean().default(false).optional(),
       email: Joi.string().email().optional(),
+      cityId: Joi.string().uuid().required(),
       document: Joi.string().trim().optional(),
       dependents: Joi.array()
         .items(
@@ -95,6 +96,7 @@ customersRoutes.put(
       numberId: Joi.string().trim().required(),
       payday: Joi.number().min(1).max(31).required(),
       silverPlan: Joi.boolean().default(false).optional(),
+      cityId: Joi.string().uuid().required(),
       email: Joi.string().email().optional(),
       document: Joi.string().trim().optional(),
       dependents: Joi.array()

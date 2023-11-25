@@ -1,4 +1,4 @@
-import Payment from '../../../../payments/infra/typeorm/entities/Payment'
+import Customer from '../../../../customers/infra/typeorm/entities/Customer'
 import {
   Column,
   CreateDateColumn,
@@ -18,6 +18,9 @@ class City {
 
   @Column()
   name: string
+
+  @OneToMany(() => Customer, customer => customer.city)
+  customers: Customer[]
 
   @CreateDateColumn()
   createdAt: Date

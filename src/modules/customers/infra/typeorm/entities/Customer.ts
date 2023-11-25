@@ -2,6 +2,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
@@ -10,6 +12,7 @@ import { v4 as uuidV4 } from 'uuid'
 import Dependent from './Dependent'
 import { Expose } from 'class-transformer'
 import Payment from '../../../../payments/infra/typeorm/entities/Payment'
+import City from '../../../../cities/infra/typeorm/entities/City'
 
 export const customerTableName = 'customers'
 
@@ -52,6 +55,15 @@ class Customer {
     cascade: true,
   })
   payments: Payment[]
+
+  @Column({ nullable: true })
+  cityId?: string | undefined
+
+  @ManyToOne(() => City, city => city.customers, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'cityId' })
+  city: City
 
   @Expose({ name: 'numberDependents' })
   numberDependents(): number {
