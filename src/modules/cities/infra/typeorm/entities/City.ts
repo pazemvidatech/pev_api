@@ -19,9 +19,7 @@ class City {
   @Column()
   name: string
 
-  @OneToMany(() => Customer, customer => customer.city, {
-    onDelete: 'SET NULL',
-  })
+  @OneToMany(() => Customer, customer => customer.city)
   customers: Customer[]
 
   @CreateDateColumn()

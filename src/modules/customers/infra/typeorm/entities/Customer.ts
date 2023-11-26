@@ -61,6 +61,7 @@ class Customer {
 
   @ManyToOne(() => City, city => city.customers, {
     eager: true,
+    onDelete: 'SET NULL'
   })
   @JoinColumn({ name: 'cityId' })
   city: City
