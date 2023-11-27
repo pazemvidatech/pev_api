@@ -53,12 +53,19 @@ class UpdateCustomerUseCase {
     if (numberId) customer.numberId = numberId
     if (address) customer.address = address
     if (email) customer.email = email
-    if (cityId) customer.cityId = cityId
+    if (cityId) {
+      customer.cityId = cityId
+      customer.city = city
+    }
     if (document) customer.document = document
     if (payday) customer.payday = payday
     if (dependents) customer.dependents = dependents
 
-    await this.customerRepository.save(customer)
+    console.log(customer)
+
+    const newCustomer = await this.customerRepository.save(customer)
+
+    console.log(newCustomer)
   }
 }
 
