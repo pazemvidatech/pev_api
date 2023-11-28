@@ -5,6 +5,7 @@ import { FindOperator } from 'typeorm'
 export interface IFindAllCustomersDTO {
   where?: {
     name?: string | FindOperator<string> | null
+    cityId?: string | null
   }
   order: {
     [key in ColumnSortType]: OrderQueryType

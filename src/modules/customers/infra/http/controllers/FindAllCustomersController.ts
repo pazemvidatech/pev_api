@@ -8,6 +8,7 @@ import { CustomerMap } from '@modules/customers/mapper/CustomerMap'
 interface IRequest {
   where?: {
     name?: string | undefined
+    cityId?: string | undefined
   }
   page: number
   size: number
@@ -16,11 +17,12 @@ interface IRequest {
 
 class FindAllCustomersController {
   async handle(req: Request, res: Response): Promise<Response> {
-    const { sort, page, size, search } = req.query
+    const { sort, page, size, search, cityId } = req.query
     const findAllCustomers = container.resolve(FindAllCustomersUseCase)
 
     const query = <IRequest>{ where: {} }
     if (search && search !== '') query.where.name = search as string
+    if (cityId && cityId !== '') query.where.cityId = cityId as string
 
     if (sort) query.sort = sort as SortQueryType
     if (page) query.page = Number(page)

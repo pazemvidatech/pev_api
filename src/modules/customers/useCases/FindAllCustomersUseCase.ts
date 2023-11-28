@@ -13,6 +13,7 @@ import { classToPlain, plainToClass } from 'class-transformer'
 interface IRequest {
   where?: {
     name?: string | FindOperator<string> | undefined
+    cityId?: string | undefined
   }
   page: number
   size: number
@@ -45,6 +46,10 @@ class FindAllCustomersUseCase {
 
     if (where.name) {
       queryData.where.name = ILike('%' + where.name + '%')
+    }
+
+    if (where.cityId) {
+      queryData.where.cityId = where.cityId
     }
 
     const [sortBy, orderBy] = sort.split(':') as [

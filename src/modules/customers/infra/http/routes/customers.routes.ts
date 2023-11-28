@@ -53,6 +53,7 @@ customersRoutes.get(
   celebrate({
     [Segments.QUERY]: Joi.object({
       search: Joi.string().optional(),
+      cityId: Joi.string().uuid().optional(),
       sort: Joi.string()
         .valid(...arraySorts)
         .optional()
