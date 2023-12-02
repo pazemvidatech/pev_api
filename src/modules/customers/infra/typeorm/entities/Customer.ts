@@ -30,6 +30,9 @@ class Customer {
   @Column({ default: false })
   silverPlan: boolean
 
+  @Column({ default: 3 })
+  frequency: number
+
   @Column()
   numberId: string
 
@@ -61,7 +64,7 @@ class Customer {
 
   @ManyToOne(() => City, city => city.customers, {
     eager: true,
-    onDelete: 'SET NULL'
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'cityId' })
   city: City

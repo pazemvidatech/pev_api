@@ -2,17 +2,13 @@ import { ICreateCustomerRequestDTO } from '@modules/customers/dtos/ICreateCustom
 import ICustomerRepository from '@modules/customers/repositories/ICustomerRepository'
 import { FindManyOptions, Repository } from 'typeorm'
 import Datasource from '@shared/infra/typeorm'
-import { v4 as uuidV4 } from 'uuid'
 import Customer from '../entities/Customer'
 import { IFindAllCustomersResponseDTO } from '@modules/customers/dtos/IFindAllCustomersDTO'
-import Dependent from '../entities/Dependent'
 
 class CustomerRepository implements ICustomerRepository {
   private ormRepository: Repository<Customer>
-  private ormDependentRepository: Repository<Dependent>
   constructor() {
     this.ormRepository = Datasource.getRepository(Customer)
-    this.ormDependentRepository = Datasource.getRepository(Dependent)
   }
 
   async create(customerData: ICreateCustomerRequestDTO): Promise<Customer> {
@@ -49,7 +45,7 @@ class CustomerRepository implements ICustomerRepository {
       LEFT JOIN "payments" ON "payments"."customerId" = "customers"."id"
       WHERE 1 = 1 ${nameFilter}
       GROUP BY "customers"."id"
-      HAVING (${currentYear} - MAX("payments"."year")) * 12 + ${currentMonth} - MAX("payments"."month") >= 2
+      HAVING (${currentYear} - MAX("payments"."year")) * 12 + ${currentMonth} - MAX("payments"."month") > "customers"."frequency"
       ORDER BY "paymentCount" DESC
       LIMIT ${take} OFFSET ${skip}
     `)
@@ -62,7 +58,7 @@ class CustomerRepository implements ICustomerRepository {
         LEFT JOIN "payments" ON "payments"."customerId" = "customers"."id"
         WHERE 1 = 1 ${nameFilter}
         GROUP BY "customers"."id"
-        HAVING (${currentYear} - MAX("payments"."year")) * 12 + ${currentMonth} - MAX("payments"."month") >= 2
+        HAVING (${currentYear} - MAX("payments"."year")) * 12 + ${currentMonth} - MAX("payments"."month") > "customers"."frequency"
       ) AS "sub"
     `)
 

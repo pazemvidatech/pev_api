@@ -10,6 +10,7 @@ interface IRequest {
   email?: string | undefined
   document?: string | undefined
   silverPlan: boolean
+  frequency: number
   address: string
   cityId: string
   payday: number
@@ -40,6 +41,7 @@ class CreateCustomerUseCase {
   async execute({
     name,
     silverPlan,
+    frequency,
     numberId,
     address,
     email,
@@ -56,7 +58,7 @@ class CreateCustomerUseCase {
       let code: string
 
       while (!code) {
-        const codeGenerated = makeCode(8)
+        const codeGenerated = makeCode(6)
 
         const checkExistsTicketCode = await this.customerRepository.findByCode(
           codeGenerated,
@@ -70,6 +72,7 @@ class CreateCustomerUseCase {
         code,
         silverPlan,
         numberId,
+        frequency,
         address,
         email,
         cityId,

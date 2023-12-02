@@ -1,6 +1,7 @@
 import { DataSource, Repository } from 'typeorm'
 import Datasource from '@shared/infra/typeorm'
 import IPaymentRepository from '@modules/payments/repositories/IPaymentRepository'
+import { addMonths } from 'date-fns'
 
 import Payment from '../entities/Payment'
 import ICreatePaymentDTO from '@modules/payments/dtos/ICreatePaymentDTO'
@@ -10,6 +11,7 @@ import {
   PaymentList,
 } from '@modules/payments/dtos/IFindAllPaymentsDTO'
 import { classToPlain } from 'class-transformer'
+import Customer from '@modules/customers/infra/typeorm/entities/Customer'
 
 class PaymentRepository implements IPaymentRepository {
   private ormRepository: Repository<Payment>
@@ -42,9 +44,13 @@ class PaymentRepository implements IPaymentRepository {
         newMonth = lastPayment.month
         newYear = lastPayment.year
       } else {
-        const currentDate = new Date()
-        newMonth = currentDate.getMonth()
-        newYear = currentDate.getFullYear()
+        const customerData = await entityManager.findOne(Customer, {
+          where: { id: customerId },
+        })
+        const createdAtCustomer = customerData.createdAt
+        const newDate = addMonths(createdAtCustomer, 1)
+        newMonth = newDate.getMonth()
+        newYear = newDate.getFullYear()
       }
 
       for (let i = 0; i < quantity; i++) {
