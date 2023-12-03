@@ -55,6 +55,7 @@ class Customer {
   dependents: Dependent[]
 
   @OneToMany(() => Payment, payment => payment.customer, {
+    eager: true,
     cascade: true,
   })
   payments: Payment[]

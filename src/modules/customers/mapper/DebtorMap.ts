@@ -24,7 +24,7 @@ export class DebtorMap {
       document,
       payday,
       numberId,
-      paymentCount,
+      paymentCount: Number(paymentCount),
     })
     return customer
   }

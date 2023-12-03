@@ -10,7 +10,6 @@ import {
   IFindAllPaymentsResponseDTO,
   PaymentList,
 } from '@modules/payments/dtos/IFindAllPaymentsDTO'
-import { classToPlain } from 'class-transformer'
 import Customer from '@modules/customers/infra/typeorm/entities/Customer'
 
 class PaymentRepository implements IPaymentRepository {
@@ -41,15 +40,19 @@ class PaymentRepository implements IPaymentRepository {
       let newMonth: number, newYear: number
 
       if (lastPayment) {
+        console.log('passou')
         newMonth = lastPayment.month
         newYear = lastPayment.year
       } else {
+        console.log('passou')
         const customerData = await entityManager.findOne(Customer, {
           where: { id: customerId },
         })
         const createdAtCustomer = customerData.createdAt
         const newDate = addMonths(createdAtCustomer, 1)
+
         newMonth = newDate.getMonth()
+
         newYear = newDate.getFullYear()
       }
 
@@ -73,6 +76,8 @@ class PaymentRepository implements IPaymentRepository {
         newPayment.createdAt = now
         paymentsToCreate.push(newPayment)
       }
+
+      console.log(paymentsToCreate)
 
       await entityManager.save(paymentsToCreate)
 

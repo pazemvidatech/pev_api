@@ -7,5 +7,5 @@ export interface IFindAllDebtorsResponseDTO {
   document: string
   payday: number
   numberId: string
-  paymentCount(): number
+  paymentCount: number
 }
