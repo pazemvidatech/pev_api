@@ -45,6 +45,9 @@ class Customer {
   @Column({ nullable: true })
   document?: string | undefined
 
+  @Column({ default: false })
+  oldRegister: boolean
+
   @Column()
   payday: number
 
@@ -55,7 +58,6 @@ class Customer {
   dependents: Dependent[]
 
   @OneToMany(() => Payment, payment => payment.customer, {
-    eager: true,
     cascade: true,
   })
   payments: Payment[]

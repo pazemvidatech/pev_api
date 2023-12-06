@@ -10,6 +10,7 @@ interface IRequest {
   email?: string | undefined
   document?: string | undefined
   silverPlan: boolean
+  oldRegister: boolean
   frequency: number
   address: string
   cityId: string
@@ -44,6 +45,7 @@ class CreateCustomerUseCase {
     frequency,
     numberId,
     address,
+    oldRegister,
     email,
     cityId,
     document,
@@ -73,6 +75,7 @@ class CreateCustomerUseCase {
         silverPlan,
         numberId,
         frequency,
+        oldRegister,
         address,
         email,
         cityId,

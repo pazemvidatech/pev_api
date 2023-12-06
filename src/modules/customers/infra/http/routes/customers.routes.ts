@@ -30,6 +30,7 @@ customersRoutes.post(
       numberId: Joi.string().trim().required(),
       payday: Joi.number().min(1).max(31).required(),
       frequency: Joi.number().min(3).default(3).optional(),
+      oldRegister: Joi.boolean().default(false).optional(),
       silverPlan: Joi.boolean().default(false).optional(),
       email: Joi.string().email().optional(),
       cityId: Joi.string().uuid().required(),

@@ -4,6 +4,7 @@ export interface ICreateCustomerRequestDTO {
   document?: string | undefined
   code: string
   silverPlan: boolean
+  oldRegister: boolean
   frequency: number
   cityId: string
   address: string
