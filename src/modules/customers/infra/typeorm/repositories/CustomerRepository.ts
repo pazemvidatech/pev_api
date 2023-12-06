@@ -2,7 +2,6 @@ import { ICreateCustomerRequestDTO } from '@modules/customers/dtos/ICreateCustom
 import ICustomerRepository from '@modules/customers/repositories/ICustomerRepository'
 import { FindManyOptions, Repository } from 'typeorm'
 import Datasource from '@shared/infra/typeorm'
-import { v4 as uuidV4 } from 'uuid'
 import Customer from '../entities/Customer'
 import { IFindAllCustomersResponseDTO } from '@modules/customers/dtos/IFindAllCustomersDTO'
 import Dependent from '../entities/Dependent'

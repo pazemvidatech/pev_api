@@ -2,7 +2,6 @@ import { inject, injectable } from 'tsyringe'
 
 import ICustomerRepository from '@modules/customers/repositories/ICustomerRepository'
 import AppError from '@shared/errors/AppError'
-import Customer from '../infra/typeorm/entities/Customer'
 import IPaymentRepository from '@modules/payments/repositories/IPaymentRepository'
 import {
   IShowCustomerByCodeResponseDTO,
@@ -10,6 +9,7 @@ import {
   LatePaymentMonthDTO,
 } from '../dtos/IShowCustomerByCodeResponseDTO'
 import Payment from '@modules/payments/infra/typeorm/entities/Payment'
+import { addMonths } from 'date-fns'
 
 @injectable()
 class ShowCustomerByCodeUseCase {
@@ -30,12 +30,26 @@ class ShowCustomerByCodeUseCase {
       customer.id,
     )
 
+    let lastPaymentMonth: number
+    let lastPaymentYear: number
+
+    if (lastPayment) {
+      let dateLastPayment = new Date(lastPayment.year, lastPayment.month - 1)
+      dateLastPayment = addMonths(dateLastPayment, customer.frequency)
+      lastPaymentMonth = dateLastPayment.getMonth() + 1
+      lastPaymentYear = dateLastPayment.getFullYear()
+    } else {
+      console.log('passou aqui')
+      let createdAtCustomer = customer.createdAt
+      createdAtCustomer = addMonths(createdAtCustomer, customer.frequency)
+      console.log(createdAtCustomer)
+      lastPaymentMonth = createdAtCustomer.getMonth() + 1
+      lastPaymentYear = createdAtCustomer.getFullYear()
+    }
+
     // Calculate months and years in arrears starting from the last payment
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1 // +1 porque os meses são baseados em 0 (janeiro = 0)
-
-    const lastPaymentMonth = lastPayment.month
-    const lastPaymentYear = lastPayment.year
 
     const latePayments: LatePaymentDTO[] = []
     for (let year = lastPaymentYear; year <= currentYear; year++) {
@@ -43,7 +57,7 @@ class ShowCustomerByCodeUseCase {
       const endMonth = year === currentYear ? currentMonth : 12
 
       const monthsForYear: LatePaymentMonthDTO[] = []
-      for (let month = startMonth; month <= endMonth; month++) {
+      for (let month = startMonth; month < endMonth; month++) {
         const monthName = this.getMonthName(month) // Função para obter o nome do mês
         monthsForYear.push({ month, monthName })
       }
