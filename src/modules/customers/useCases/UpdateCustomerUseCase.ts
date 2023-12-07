@@ -15,6 +15,7 @@ interface IRequest {
   address: string
   cityId: string
   payday: number
+  frequency?: number | undefined
   numberId: string
   dependents: Dependent[]
 }
@@ -35,6 +36,7 @@ class UpdateCustomerUseCase {
     silverPlan,
     numberId,
     address,
+    frequency,
     oldRegister,
     email,
     cityId,
@@ -54,6 +56,7 @@ class UpdateCustomerUseCase {
     if (silverPlan) customer.silverPlan = silverPlan
     if (oldRegister) customer.oldRegister = oldRegister
     if (numberId) customer.numberId = numberId
+    if (frequency) customer.frequency = frequency
     if (address) customer.address = address
     if (email) customer.email = email
     if (cityId) {
