@@ -11,6 +11,7 @@ interface IRequest {
   email?: string | undefined
   document?: string | undefined
   silverPlan: boolean
+  oldRegister: boolean
   address: string
   cityId: string
   payday: number
@@ -34,6 +35,7 @@ class UpdateCustomerUseCase {
     silverPlan,
     numberId,
     address,
+    oldRegister,
     email,
     cityId,
     document,
@@ -50,6 +52,7 @@ class UpdateCustomerUseCase {
 
     if (name) customer.name = name
     if (silverPlan) customer.silverPlan = silverPlan
+    if (oldRegister) customer.oldRegister = oldRegister
     if (numberId) customer.numberId = numberId
     if (address) customer.address = address
     if (email) customer.email = email

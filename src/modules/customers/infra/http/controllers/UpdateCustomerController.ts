@@ -8,6 +8,7 @@ export default class UpdateCustomerController {
     const {
       name,
       silverPlan,
+      oldRegister,
       numberId,
       address,
       email,
@@ -25,6 +26,7 @@ export default class UpdateCustomerController {
       customerId,
       name,
       silverPlan,
+      oldRegister,
       numberId,
       address,
       email,
