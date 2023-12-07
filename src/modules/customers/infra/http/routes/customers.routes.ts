@@ -98,6 +98,7 @@ customersRoutes.put(
       address: Joi.string().trim().required(),
       numberId: Joi.string().trim().required(),
       payday: Joi.number().min(1).max(31).required(),
+      frequency: Joi.number().min(3).default(3).optional(),
       silverPlan: Joi.boolean().optional(),
       oldRegister: Joi.boolean().optional(),
       cityId: Joi.string().uuid().required(),
