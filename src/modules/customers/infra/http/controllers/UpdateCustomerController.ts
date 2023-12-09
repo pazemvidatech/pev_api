@@ -38,6 +38,6 @@ export default class UpdateCustomerController {
       dependents: dependents,
     })
 
-    return res.status(202).send()
+    return res.status(204).send()
   }
 }

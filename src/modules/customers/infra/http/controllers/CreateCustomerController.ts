@@ -35,6 +35,6 @@ export default class CreateCustomerController {
       dependents,
     })
 
-    return res.status(204).send()
+    return res.status(201).send()
   }
 }

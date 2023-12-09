@@ -17,11 +17,12 @@ class CreateDependentUseCase {
   ) {}
 
   async execute({ name, customerId, deathDate }: IRequest): Promise<Dependent> {
-    return await this.dependentRepository.create({
+    const dependetCreated = await this.dependentRepository.create({
       name,
       customerId,
       deathDate,
     })
+    return dependetCreated
   }
 }
 

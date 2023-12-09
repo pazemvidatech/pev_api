@@ -15,6 +15,6 @@ export default class CreateDependentController {
       deathDate,
     })
 
-    return res.status(204).send(dependentCreated)
+    return res.status(201).send(dependentCreated)
   }
 }
