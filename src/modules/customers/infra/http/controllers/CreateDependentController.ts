@@ -9,12 +9,12 @@ export default class CreateDependentController {
 
     const createDependentUseCase = container.resolve(CreateDependentUseCase)
 
-    await createDependentUseCase.execute({
+    const dependentCreated = await createDependentUseCase.execute({
       customerId,
       name,
       deathDate,
     })
 
-    return res.status(204).send()
+    return res.status(204).send(dependentCreated)
   }
 }

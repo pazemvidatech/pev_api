@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import IDependentRepository from '../repositories/IDependentRepository'
+import Dependent from '../infra/typeorm/entities/Dependent'
 
 interface IRequest {
   customerId: string
@@ -15,8 +16,8 @@ class CreateDependentUseCase {
     private dependentRepository: IDependentRepository,
   ) {}
 
-  async execute({ name, customerId, deathDate }: IRequest): Promise<void> {
-    await this.dependentRepository.create({
+  async execute({ name, customerId, deathDate }: IRequest): Promise<Dependent> {
+    return await this.dependentRepository.create({
       name,
       customerId,
       deathDate,
