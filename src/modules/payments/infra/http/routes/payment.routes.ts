@@ -6,7 +6,6 @@ import FindAllPaymentsController from '../controllers/FindAllPaymentsController'
 import { arraySorts } from '@modules/payments/types/SortQueryType'
 import ensureSeller from '@shared/infra/http/middlewares/ensureSeller'
 import ensureAdmin from '@shared/infra/http/middlewares/ensureAdmin'
-import FindAllPaymentsFilterSellerController from '../controllers/FindAllPaymentsFilterSellerController'
 import FindPaymentsCustomerController from '../controllers/FindPaymentsCustomerController'
 import ShowPaymentController from '../controllers/ShowPaymentController'
 
@@ -15,12 +14,11 @@ const showPaymentController = new ShowPaymentController()
 const createPaymentController = new CreatePaymentController()
 const deletePaymentController = new DeletePaymentController()
 const findAllPaymentsController = new FindAllPaymentsController()
-const findAllPaymentsFilterSellerController = new FindAllPaymentsFilterSellerController()
 const findPaymentsCustomerController = new FindPaymentsCustomerController()
 
 paymentRoutes.get(
   '/',
-  ensureAdmin,
+  ensureSeller,
   celebrate({
     [Segments.QUERY]: Joi.object({
       sort: Joi.string()
@@ -57,24 +55,6 @@ paymentRoutes.delete(
     },
   }),
   deletePaymentController.handle,
-)
-
-paymentRoutes.get(
-  '/forSeller',
-  ensureSeller,
-  celebrate({
-    [Segments.QUERY]: Joi.object({
-      sort: Joi.string()
-        .valid(...arraySorts)
-        .optional()
-        .default('createdAt:DESC'),
-      page: Joi.number().optional().default(1),
-      size: Joi.number().optional().default(10),
-      month: Joi.number().min(1).max(12).optional(),
-      year: Joi.number().min(2023).optional(),
-    }).unknown(false),
-  }),
-  findAllPaymentsFilterSellerController.handle,
 )
 
 paymentRoutes.get(

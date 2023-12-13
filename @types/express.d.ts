@@ -6,6 +6,7 @@ declare namespace Express {
       name: string
       role: number
       username: string
+      isAdmin: boolean
     }
     accessToken
     io

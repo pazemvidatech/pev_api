@@ -18,12 +18,17 @@ interface IRequest {
 class FindAllPaymentsController {
   async handle(req: Request, res: Response): Promise<Response> {
     const { sort, page, size, accountId, month, year } = req.query
+    const { isAdmin, id } = req.account
 
     const findAllPayments = container.resolve(FindAllPaymentsUseCase)
 
     const query = <IRequest>{ where: {} }
 
-    if (accountId) query.where.accountId = accountId as string
+    if (isAdmin) {
+      if (accountId) query.where.accountId = accountId as string
+    } else {
+      query.where.accountId = id as string
+    }
     if (sort) query.sort = sort as SortQueryType
     if (page) query.page = Number(page)
     if (size) query.size = Number(size)
