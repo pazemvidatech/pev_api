@@ -31,17 +31,20 @@ class CustomerRepository implements ICustomerRepository {
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
 
-    const result = await this.ormRepository.query(`
-      SELECT
-        COALESCE(
-          ((${currentYear} * 12 + ${currentMonth}) - (MAX("payments"."year") * 12 + MAX("payments"."month") + 1)) - "customers"."frequency",
-          ((${currentYear} * 12 + ${currentMonth}) - ((EXTRACT(YEAR FROM "customers"."createdAt") * 12 + EXTRACT(MONTH FROM "customers"."createdAt")) + 1)) - "customers"."frequency"
-        ) AS "paymentCount"
-      FROM "customers"
-      LEFT JOIN "payments" ON "payments"."customerId" = "customers"."id"
-      WHERE "customers"."id" = ${customerId}
-      GROUP BY "customers"."id"
-    `)
+    const result = await this.ormRepository.query(
+      `
+    SELECT
+      COALESCE(
+        ((${currentYear} * 12 + ${currentMonth}) - (MAX("payments"."year") * 12 + MAX("payments"."month") + 1)) - "customers"."frequency",
+        ((${currentYear} * 12 + ${currentMonth}) - ((EXTRACT(YEAR FROM "customers"."createdAt") * 12 + EXTRACT(MONTH FROM "customers"."createdAt")) + 1)) - "customers"."frequency"
+      ) AS "paymentCount"
+    FROM "customers"
+    LEFT JOIN "payments" ON "payments"."customerId" = "customers"."id"
+    WHERE "customers"."id" = $1
+    GROUP BY "customers"."id"
+`,
+      [customerId],
+    )
 
     return result.length > 0 ? Number(result[0].paymentCount) : 0
   }

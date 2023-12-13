@@ -58,14 +58,14 @@ class RenegotiationRepository implements IRenegotiationRepository {
       }
 
       const firstDate = new Date(newYear, newMonth)
-      const nowDate = subMonths(new Date(), 1)
+      const nowDate = new Date()
 
       const quantityMonths = differenceInMonths(nowDate, firstDate)
 
       for (let i = 0; i < quantityMonths; i++) {
         newMonth++
 
-        if (i == 0) {
+        if (i === 0) {
           initialMonth = newMonth
           initialYear = newYear
         }
@@ -75,7 +75,7 @@ class RenegotiationRepository implements IRenegotiationRepository {
           newYear++
         }
 
-        if (i == quantityMonths) {
+        if (i === quantityMonths - 1) {
           finalMonth = newMonth
           finalYear = newYear
         }
@@ -87,14 +87,12 @@ class RenegotiationRepository implements IRenegotiationRepository {
         const newPayment = new Payment()
         newPayment.month = newMonth
         newPayment.year = newYear
-        newPayment.amount = Number(amount) / quantityMonths
+        newPayment.amount = Number((amount / quantityMonths).toPrecision(2))
         newPayment.customerId = customerId
         newPayment.accountId = accountId
         newPayment.createdAt = now
         paymentsToCreate.push(newPayment)
       }
-
-      await entityManager.save(paymentsToCreate)
 
       const newRenegotiation = new Renegotiation()
       newRenegotiation.initialMonth = initialMonth
@@ -110,6 +108,14 @@ class RenegotiationRepository implements IRenegotiationRepository {
         Renegotiation,
         newRenegotiation,
       )
+
+      for (let index = 0; index < paymentsToCreate.length; index++) {
+        const item = paymentsToCreate[index]
+
+        item.renegotiationId = renegotiationCreated.id
+      }
+
+      await entityManager.save(paymentsToCreate)
 
       return renegotiationCreated
     })
