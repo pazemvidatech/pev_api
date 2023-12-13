@@ -4,6 +4,7 @@ import Customer from '../modules/customers/infra/typeorm/entities/Customer'
 import Dependent from '../modules/customers/infra/typeorm/entities/Dependent'
 import Payment from '../modules/payments/infra/typeorm/entities/Payment'
 import City from '../modules/cities/infra/typeorm/entities/City'
+import Renegotiation from '../modules/payments/infra/typeorm/entities/Renegotiation'
 
 let config: PostgresConnectionOptions
 
@@ -18,7 +19,7 @@ if (process.env.NODE_ENV === 'local') {
     password: process.env.POSTGRES_PASSWORD,
     database: 'postgres',
     subscribers: [],
-    entities: [Account, Customer, Dependent, Payment, City],
+    entities: [Account, Customer, Dependent, Payment, City, Renegotiation],
     migrations: ['src/shared/infra/typeorm/migrations/*.ts'],
     migrationsRun: true,
     migrationsTableName: 'history',
@@ -36,7 +37,7 @@ if (process.env.NODE_ENV === 'local') {
       },
     },
     subscribers: [],
-    entities: [Account, Customer, Dependent, Payment, City],
+    entities: [Account, Customer, Dependent, Payment, City, Renegotiation],
     migrations: ['dist/shared/infra/typeorm/migrations/*.js'],
     migrationsRun: true,
     migrationsTableName: 'history',

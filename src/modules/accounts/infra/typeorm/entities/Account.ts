@@ -1,4 +1,4 @@
-import Renegotiation from '@modules/payments/infra/typeorm/entities/Renegotiation'
+import Renegotiation from '../../../../payments/infra/typeorm/entities/Renegotiation'
 import Payment from '../../../../payments/infra/typeorm/entities/Payment'
 import {
   Column,

@@ -13,7 +13,7 @@ import Dependent from './Dependent'
 import { Expose } from 'class-transformer'
 import Payment from '../../../../payments/infra/typeorm/entities/Payment'
 import City from '../../../../cities/infra/typeorm/entities/City'
-import Renegotiation from '@modules/payments/infra/typeorm/entities/Renegotiation'
+import Renegotiation from '../../../../payments/infra/typeorm/entities/Renegotiation'
 
 export const customerTableName = 'customers'
 
