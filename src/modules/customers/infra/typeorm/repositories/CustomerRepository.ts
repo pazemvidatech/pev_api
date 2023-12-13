@@ -4,14 +4,11 @@ import { FindManyOptions, Repository } from 'typeorm'
 import Datasource from '@shared/infra/typeorm'
 import Customer from '../entities/Customer'
 import { IFindAllCustomersResponseDTO } from '@modules/customers/dtos/IFindAllCustomersDTO'
-import Dependent from '../entities/Dependent'
 
 class CustomerRepository implements ICustomerRepository {
   private ormRepository: Repository<Customer>
-  private ormDependentRepository: Repository<Dependent>
   constructor() {
     this.ormRepository = Datasource.getRepository(Customer)
-    this.ormDependentRepository = Datasource.getRepository(Dependent)
   }
 
   async create(customerData: ICreateCustomerRequestDTO): Promise<Customer> {
@@ -26,6 +23,27 @@ class CustomerRepository implements ICustomerRepository {
     const result = await this.ormRepository.findAndCount(query)
 
     return { data: result[0], total: result[1] }
+  }
+
+  public async findPaymentCountByCustomerId(
+    customerId: string,
+  ): Promise<number> {
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth() + 1
+
+    const result = await this.ormRepository.query(`
+      SELECT
+        COALESCE(
+          ((${currentYear} * 12 + ${currentMonth}) - (MAX("payments"."year") * 12 + MAX("payments"."month") + 1)) - "customers"."frequency",
+          ((${currentYear} * 12 + ${currentMonth}) - ((EXTRACT(YEAR FROM "customers"."createdAt") * 12 + EXTRACT(MONTH FROM "customers"."createdAt")) + 1)) - "customers"."frequency"
+        ) AS "paymentCount"
+      FROM "customers"
+      LEFT JOIN "payments" ON "payments"."customerId" = "customers"."id"
+      WHERE "customers"."id" = ${customerId}
+      GROUP BY "customers"."id"
+    `)
+
+    return result.length > 0 ? Number(result[0].paymentCount) : 0
   }
 
   public async findAllDebtors(

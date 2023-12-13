@@ -7,42 +7,48 @@ import {
   JoinColumn,
   CreateDateColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm'
 
 import { v4 as uuidV4 } from 'uuid'
 import Account from '../../../../accounts/infra/typeorm/entities/Account'
-import Renegotiation from './Renegotiation'
+import Payment from './Payment'
 
-export const paymentTableName = 'payments'
+export const renegotiationTableName = 'renegotiations'
 
-@Entity(paymentTableName)
-class Payment {
+@Entity(renegotiationTableName)
+class Renegotiation {
   @PrimaryColumn()
   id: string
 
-  @Column({ nullable: true })
-  renegotiationId: string | undefined
-
-  @ManyToOne(() => Renegotiation, renegotiation => renegotiation.payments, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'renegotiationId' })
-  renegotiation: Renegotiation
+  @Column()
+  initialMonth: number
 
   @Column()
-  month: number
+  initialYear: number
 
   @Column()
-  year: number
+  finalMonth: number
+
+  @Column()
+  finalYear: number
+
+  @Column()
+  negotiator: string
 
   @Column()
   amount: number
+
+  @OneToMany(() => Payment, payment => payment.renegotiation, {
+    cascade: true,
+  })
+  payments: Payment[]
 
   @Exclude()
   @Column()
   customerId: string
 
-  @ManyToOne(() => Customer, customer => customer.payments, {
+  @ManyToOne(() => Customer, customer => customer.renegotiations, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'customerId' })
@@ -68,4 +74,4 @@ class Payment {
   }
 }
 
-export default Payment
+export default Renegotiation

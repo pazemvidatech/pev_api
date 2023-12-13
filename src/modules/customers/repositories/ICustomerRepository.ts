@@ -13,7 +13,8 @@ export default interface ICustomerRepository {
     search?: string | undefined,
   ): Promise<IFindAllCustomersResponseDTO>
   findByCode(email: string): Promise<Customer | undefined>
-  findById(customer_id: string): Promise<Customer | undefined>
+  findById(customerId: string): Promise<Customer | undefined>
+  findPaymentCountByCustomerId(customerId: string): Promise<number>
   remove(customer: Customer): Promise<Customer>
   save(customer: Customer): Promise<Customer>
 }

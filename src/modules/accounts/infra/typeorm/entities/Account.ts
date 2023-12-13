@@ -1,3 +1,4 @@
+import Renegotiation from '@modules/payments/infra/typeorm/entities/Renegotiation'
 import Payment from '../../../../payments/infra/typeorm/entities/Payment'
 import {
   Column,
@@ -30,6 +31,9 @@ class Account {
 
   @OneToMany(() => Payment, payment => payment.customer)
   payments: Payment[]
+
+  @OneToMany(() => Renegotiation, renegotiation => renegotiation.customer)
+  renegotiations: Renegotiation[]
 
   @CreateDateColumn()
   createdAt: Date

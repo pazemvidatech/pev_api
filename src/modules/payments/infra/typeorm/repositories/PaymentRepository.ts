@@ -40,11 +40,9 @@ class PaymentRepository implements IPaymentRepository {
       let newMonth: number, newYear: number
 
       if (lastPayment) {
-        console.log('passou')
         newMonth = lastPayment.month
         newYear = lastPayment.year
       } else {
-        console.log('passou')
         const customerData = await entityManager.findOne(Customer, {
           where: { id: customerId },
         })

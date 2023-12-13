@@ -13,6 +13,7 @@ import Dependent from './Dependent'
 import { Expose } from 'class-transformer'
 import Payment from '../../../../payments/infra/typeorm/entities/Payment'
 import City from '../../../../cities/infra/typeorm/entities/City'
+import Renegotiation from '@modules/payments/infra/typeorm/entities/Renegotiation'
 
 export const customerTableName = 'customers'
 
@@ -61,6 +62,11 @@ class Customer {
     cascade: true,
   })
   payments: Payment[]
+
+  @OneToMany(() => Renegotiation, renegotiation => renegotiation.customer, {
+    cascade: true,
+  })
+  renegotiations: Renegotiation[]
 
   @Column({ nullable: true })
   cityId?: string | undefined
