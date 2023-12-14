@@ -62,6 +62,7 @@ class FindPaymentsCustomerUseCase {
           month: item.month,
           monthName: monthNames[item.month - 1],
           amount: item.amount,
+          renegotiationId: item.renegotiationId,
         })
       } else {
         outputData.push({
@@ -71,6 +72,7 @@ class FindPaymentsCustomerUseCase {
               month: item.month,
               monthName: monthNames[item.month - 1],
               amount: item.amount,
+              renegotiationId: item.renegotiationId,
             },
           ],
         })

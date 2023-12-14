@@ -19,6 +19,10 @@ class DeletePaymentUseCase {
 
     if (!payment) throw new AppError('This payment does not exists')
 
+    if (payment.renegotiationId != null) {
+      throw new AppError('This payment cannot be deleted')
+    }
+
     await this.paymentRepository.remove(payment)
   }
 }
