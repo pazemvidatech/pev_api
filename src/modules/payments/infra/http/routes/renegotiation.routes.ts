@@ -17,7 +17,6 @@ renegotiationRoutes.post(
   celebrate({
     [Segments.BODY]: {
       customerId: Joi.string().uuid().required(),
-      amount: Joi.number().required(),
       negotiator: Joi.string().required(),
     },
   }),

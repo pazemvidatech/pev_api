@@ -5,7 +5,7 @@ import CreateRenegotiationUseCase from '../../../useCases/CreateRenegotiationUse
 
 class CreateRenegotiationController {
   async handle(req: Request, res: Response): Promise<Response> {
-    const { customerId, amount, negotiator } = req.body
+    const { customerId, negotiator } = req.body
 
     const accountId = req.account.id
 
@@ -15,7 +15,6 @@ class CreateRenegotiationController {
       accountId,
       customerId,
       negotiator,
-      amount,
     })
 
     return res.json(renegotiation)
