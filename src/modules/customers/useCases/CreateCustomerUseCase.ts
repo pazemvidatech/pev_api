@@ -60,7 +60,7 @@ class CreateCustomerUseCase {
       let code: string
 
       while (!code) {
-        const codeGenerated = makeCode(6)
+        const codeGenerated = makeCode(8)
 
         const checkExistsTicketCode = await this.customerRepository.findByCode(
           codeGenerated,
