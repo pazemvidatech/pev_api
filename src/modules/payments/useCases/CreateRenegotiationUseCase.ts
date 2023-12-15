@@ -43,8 +43,8 @@ class CreateRenegotiationUseCase {
       throw new AppError('The customer is not a debtor', 404)
     }
 
-    const amountRenegotiation = await this.featureFlagProvider.getConfig(
-      'amountRenegotiation',
+    const amountRenegotiation = await this.featureFlagProvider.getPreference(
+      'renegotiationAmount',
     )
 
     const renegotiation = await this.renegotiationRepository.create({

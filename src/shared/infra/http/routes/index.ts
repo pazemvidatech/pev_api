@@ -12,6 +12,7 @@ import AuthenticateRouter from '@modules/accounts/infra/http/routes/authenticate
 import PartnersRouter from '@modules/accounts/infra/http/routes/partners.routes'
 import PaymentRouter from '@modules/payments/infra/http/routes/payment.routes'
 import RenegotiationRouter from '@modules/payments/infra/http/routes/renegotiation.routes'
+import PreferencesRouter from '@modules/preferences/infra/http/routes/preferences.routes'
 import CityRouter from '@modules/cities/infra/http/routes/cities.routes'
 
 const optionsSwagger = {
@@ -35,6 +36,7 @@ routes.use('/passwords', PasswordRouter)
 routes.use('/partners', PartnersRouter)
 routes.use('/payments', PaymentRouter)
 routes.use('/renegotiations', RenegotiationRouter)
+routes.use('/preferences', PreferencesRouter)
 routes.use('/cities', CityRouter)
 routes.use('/auth', AuthenticateRouter)
 

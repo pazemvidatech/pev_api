@@ -43,7 +43,7 @@ class CreatePaymentUseCase {
       keyAmount = 'normalAmount'
     }
 
-    const amount = (await this.featureFlagProvider.getConfig(
+    const amount = (await this.featureFlagProvider.getPreference(
       keyAmount,
     )) as number
 
