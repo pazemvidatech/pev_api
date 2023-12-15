@@ -23,6 +23,7 @@ export interface PaymentList {
   id: string
   month: number
   year: number
+  renegotiationId: string
   amount: number
   createdAt: Date
   customerName: string

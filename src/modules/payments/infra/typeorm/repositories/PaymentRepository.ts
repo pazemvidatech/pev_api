@@ -108,6 +108,7 @@ class PaymentRepository implements IPaymentRepository {
         'payment.month',
         'payment.year',
         'payment.amount',
+        'payment.renegotiationId',
         'payment.createdAt',
         'customer.name AS customerName',
         'account.name AS accountName',
@@ -125,6 +126,7 @@ class PaymentRepository implements IPaymentRepository {
       id: result.payment_id,
       month: result.payment_month,
       year: result.payment_year,
+      renegotiationId: result.payment_renegotiationId,
       amount: result.payment_amount,
       createdAt: result.payment_createdAt,
       customerName: result.customername,
@@ -161,6 +163,7 @@ class PaymentRepository implements IPaymentRepository {
         'payment.year',
         'payment.amount',
         'payment.createdAt',
+        'payment.renegotiationId',
         'customer.name AS customerName',
         'account.name AS accountName',
       ])
@@ -201,6 +204,7 @@ class PaymentRepository implements IPaymentRepository {
       year: result.payment_year,
       amount: result.payment_amount,
       createdAt: result.payment_createdAt,
+      renegotiationId: result.payment_renegotiationId,
       customerName: result.customername,
       accountName: result.accountname,
     }))
