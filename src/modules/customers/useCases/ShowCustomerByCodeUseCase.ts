@@ -4,11 +4,11 @@ import ICustomerRepository from '@modules/customers/repositories/ICustomerReposi
 import AppError from '@shared/errors/AppError'
 import IPaymentRepository from '@modules/payments/repositories/IPaymentRepository'
 import {
+  INextPayment,
   IShowCustomerByCodeResponseDTO,
   LatePaymentDTO,
   LatePaymentMonthDTO,
 } from '../dtos/IShowCustomerByCodeResponseDTO'
-import Payment from '@modules/payments/infra/typeorm/entities/Payment'
 import { addMonths } from 'date-fns'
 
 @injectable()
@@ -39,10 +39,9 @@ class ShowCustomerByCodeUseCase {
       lastPaymentMonth = dateLastPayment.getMonth() + 1
       lastPaymentYear = dateLastPayment.getFullYear()
     } else {
-      console.log('passou aqui')
       let createdAtCustomer = customer.createdAt
       createdAtCustomer = addMonths(createdAtCustomer, customer.frequency)
-      console.log(createdAtCustomer)
+
       lastPaymentMonth = createdAtCustomer.getMonth() + 1
       lastPaymentYear = createdAtCustomer.getFullYear()
     }
@@ -65,9 +64,34 @@ class ShowCustomerByCodeUseCase {
       latePayments.push({ year, months: monthsForYear })
     }
 
+    let nextPayment: INextPayment
+    let nextPaymentMonth: number
+    let nextPaymentYear: number
+
+    if (lastPayment) {
+      let dateLastPayment = new Date(lastPayment.year, lastPayment.month - 1)
+      dateLastPayment = addMonths(dateLastPayment, 1)
+
+      nextPaymentMonth = dateLastPayment.getMonth() + 1
+      nextPaymentYear = dateLastPayment.getFullYear()
+    } else {
+      let createdAtCustomer = customer.createdAt
+      createdAtCustomer = addMonths(createdAtCustomer, 1)
+
+      nextPaymentMonth = createdAtCustomer.getMonth() + 1
+      nextPaymentYear = createdAtCustomer.getFullYear()
+    }
+
+    nextPayment = {
+      month: nextPaymentMonth,
+      monthName: this.getMonthName(nextPaymentMonth),
+      year: nextPaymentYear,
+    }
+
     return {
       ...customer,
       latePayments,
+      nextPayment,
     }
   }
 

@@ -17,4 +17,11 @@ export interface IShowCustomerByCodeResponseDTO {
   payday: number
   numberId: string
   latePayments: LatePaymentDTO[]
+  nextPayment: INextPayment
+}
+
+export interface INextPayment {
+  month: number
+  monthName: string
+  year: number
 }
