@@ -9,6 +9,7 @@ import DeleteCustomerController from '../controllers/DeleteCustomerController'
 import ShowCustomerController from '../controllers/ShowCustomerController'
 import UpdateCustomerController from '../controllers/UpdateCustomerController'
 import ShowCustomerByCodeController from '../controllers/ShowCustomerByCodeController'
+import ConvertSpreadsheetCustomerController from '../controllers/ConvertSpreadsheetCustomerController'
 
 const createCustomerUseCase = new CreateCustomerController()
 const showCustomerController = new ShowCustomerController()
@@ -16,6 +17,7 @@ const showCustomerByCodeController = new ShowCustomerByCodeController()
 const findAllCustomersController = new FindAllCustomersController()
 const updateCustomerController = new UpdateCustomerController()
 const deleteCustomerController = new DeleteCustomerController()
+const convertSpreadsheetCustomerController = new ConvertSpreadsheetCustomerController()
 
 const customersRoutes = Router()
 
@@ -85,6 +87,17 @@ customersRoutes.post(
     },
   }),
   showCustomerByCodeController.handle,
+)
+
+customersRoutes.post(
+  '/convert',
+  celebrate({
+    [Segments.BODY]: {
+      content: Joi.string().required(),
+      cityId: Joi.string().uuid().required(),
+    },
+  }),
+  convertSpreadsheetCustomerController.handle,
 )
 
 customersRoutes.put(

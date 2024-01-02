@@ -1,5 +1,6 @@
 import './DateProvider'
 import './HashProvider'
+import './AiProvider'
 import './CacheProvider'
 import './AuthenticationProvider'
 import './FeatureFlagProvider'
