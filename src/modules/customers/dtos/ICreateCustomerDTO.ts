@@ -11,10 +11,18 @@ export interface ICreateCustomerRequestDTO {
   payday: number
   numberId: string
   dependents: ICreateDependentRequestDTO[]
+  payments?: ICreatePaymentRequestDTO[]
 }
 
 export interface ICreateDependentRequestDTO {
   name: string
   deathDate?: Date | undefined
+  customerId?: string | undefined
+}
+
+export interface ICreatePaymentRequestDTO {
+  amount: number
+  month: number
+  year: number
   customerId?: string | undefined
 }

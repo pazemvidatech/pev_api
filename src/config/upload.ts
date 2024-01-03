@@ -20,11 +20,12 @@ export default {
     },
   }),
   fileFilter: async (req, file, cb) => {
-    if (!file.mimetype.match(/(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
-      return cb(new AppError('Only JPG and PNG files are allowed!'), false)
+    console.log(file.mimetype)
+    if (!file.mimetype.match(/(xls|xlsx|XLS|XLSX|excel)$/)) {
+      return cb(new AppError('Only XLS and XLSX files are allowed!'), false)
     }
 
-    const filetypes = /jpeg|jpg|png/
+    const filetypes = /xls|xlsx|/
     const mimetype = filetypes.test(file.mimetype)
 
     if (mimetype) {

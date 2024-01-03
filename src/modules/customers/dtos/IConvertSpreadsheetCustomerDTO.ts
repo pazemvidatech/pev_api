@@ -1,4 +1,4 @@
 export interface IConvertSpreadsheetCustomerDTO {
-  content: string
+  file: string
   cityId: string
 }

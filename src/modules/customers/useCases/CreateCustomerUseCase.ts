@@ -2,7 +2,10 @@ import { inject, injectable } from 'tsyringe'
 
 import AppError from '@shared/errors/AppError'
 import ICustomerRepository from '../repositories/ICustomerRepository'
-import { ICreateDependentRequestDTO } from '../dtos/ICreateCustomerDTO'
+import {
+  ICreateDependentRequestDTO,
+  ICreatePaymentRequestDTO,
+} from '../dtos/ICreateCustomerDTO'
 import ICityRepository from '@modules/cities/repositories/ICityRepository'
 
 interface IRequest {
@@ -17,6 +20,7 @@ interface IRequest {
   payday: number
   numberId: string
   dependents: ICreateDependentRequestDTO[]
+  payments?: ICreatePaymentRequestDTO[]
 }
 
 function makeCode(length: number) {
@@ -51,6 +55,7 @@ class CreateCustomerUseCase {
     document,
     payday,
     dependents,
+    payments,
   }: IRequest): Promise<void> {
     const city = await this.cityRepository.findById(cityId)
 
@@ -82,6 +87,7 @@ class CreateCustomerUseCase {
         document,
         payday,
         dependents,
+        payments,
       })
     } catch (error) {
       throw new AppError(error.message, error.statusCode)

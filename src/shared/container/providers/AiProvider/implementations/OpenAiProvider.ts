@@ -77,10 +77,50 @@ const schema = {
           amount: {
             type: 'integer',
             description:
-              'amount payed in payment in cents, R$ 20,00 equal 2000',
+              'amount payed in payment in cents, example: R$ 20,00 equal 2000',
           },
         },
         required: ['month', 'year', 'amount'],
+      },
+    },
+    renegotiations: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          initialMonth: {
+            type: 'integer',
+            description: 'Month in which a renegotiation occurred',
+          },
+          initialYear: {
+            type: 'integer',
+            description: 'Year in which a renegotiation occurred',
+          },
+          finalMonth: {
+            type: 'integer',
+            description: 'Month in which the renegotiation period ended',
+          },
+          finalYear: {
+            type: 'integer',
+            description: 'Year in which the renegotiation period ended',
+          },
+          negotiator: {
+            type: 'string',
+            description: 'Name of person who carried out the renegotiation',
+          },
+          amount: {
+            type: 'integer',
+            description: 'Always have value: 10000',
+          },
+        },
+        required: [
+          'initialMonth',
+          'initialYear',
+          'finalMonth',
+          'finalYear',
+          'negotiator',
+          'amount',
+        ],
       },
     },
     cityId: {
@@ -100,6 +140,7 @@ const schema = {
     'payday',
     'dependents',
     'payments',
+    'renegotiations',
     'cityId',
   ],
 }
@@ -117,7 +158,7 @@ class OpenAiProvider implements IAiProvider {
   public async convertToJson(content: string, cityId: string): Promise<any> {
     try {
       const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-4-1106-preview',
         messages: [
           {
             role: 'system',
@@ -125,6 +166,7 @@ class OpenAiProvider implements IAiProvider {
               'You convert customer spreadsheet data that is in string to json',
           },
           { role: 'system', content: `The cityId is "${cityId}"` },
+          { role: 'system', content: `All names convert to Capitalize text` },
           { role: 'user', content: content },
         ],
         functions: [
