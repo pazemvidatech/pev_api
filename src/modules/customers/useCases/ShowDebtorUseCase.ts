@@ -53,15 +53,16 @@ class ShowDebtorUseCase {
     const latePayments: LatePaymentDTO[] = []
     for (let year = lastPaymentYear; year <= currentYear; year++) {
       const startMonth = year === lastPaymentYear ? lastPaymentMonth + 1 : 1
-      const endMonth = year === currentYear ? currentMonth : 12
+      const endMonth = year === currentYear ? currentMonth - 1 : 12 // Ajuste aqui
 
       const monthsForYear: LatePaymentMonthDTO[] = []
-      for (let month = startMonth; month < endMonth; month++) {
+      for (let month = startMonth; month <= endMonth; month++) {
         const monthName = this.getMonthName(month) // Função para obter o nome do mês
         monthsForYear.push({ month, monthName })
       }
 
-      latePayments.push({ year, months: monthsForYear })
+      if (monthsForYear.length != 0)
+        latePayments.push({ year, months: monthsForYear })
     }
 
     return {

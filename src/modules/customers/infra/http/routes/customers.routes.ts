@@ -119,6 +119,7 @@ customersRoutes.put(
       frequency: Joi.number().min(3).default(3).optional(),
       silverPlan: Joi.boolean().optional(),
       oldRegister: Joi.boolean().optional(),
+      phone: Joi.string().trim().optional(),
       cityId: Joi.string().uuid().required(),
       email: Joi.string().email().optional(),
       document: Joi.string().trim().optional(),
