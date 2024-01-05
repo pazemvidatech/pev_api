@@ -7,6 +7,7 @@ import Renegotiation from '../entities/Renegotiation'
 import ICreateRenegotiationDTO from '@modules/payments/dtos/ICreateRenegotiationDTO'
 import Customer from '@modules/customers/infra/typeorm/entities/Customer'
 import Payment from '../entities/Payment'
+import ICreateOldRenegotiationDTO from '@modules/payments/dtos/ICreateOldRenegotiationDTO'
 
 class RenegotiationRepository implements IRenegotiationRepository {
   private ormRepository: Repository<Renegotiation>
@@ -103,6 +104,79 @@ class RenegotiationRepository implements IRenegotiationRepository {
       newRenegotiation.negotiator = negotiator
       newRenegotiation.customerId = customerId
       newRenegotiation.accountId = accountId
+
+      const renegotiationCreated = await entityManager.save(
+        Renegotiation,
+        newRenegotiation,
+      )
+
+      for (let index = 0; index < paymentsToCreate.length; index++) {
+        const item = paymentsToCreate[index]
+
+        item.renegotiationId = renegotiationCreated.id
+      }
+
+      await entityManager.save(paymentsToCreate)
+
+      return renegotiationCreated
+    })
+  }
+
+  public async createWithDates(
+    paymentData: ICreateOldRenegotiationDTO,
+  ): Promise<Renegotiation> {
+    const {
+      customerId,
+      negotiator,
+      amount,
+      initialMonth,
+      initialYear,
+      finalMonth,
+      finalYear,
+    } = paymentData
+    return await this.connection.transaction(async entityManager => {
+      const paymentsToCreate: Payment[] = []
+
+      let newMonth: number, newYear: number
+
+      const initialDate = new Date(initialYear, initialMonth - 1)
+      const finalDate = new Date(finalYear, finalMonth - 1)
+
+      const quantityMonths = differenceInMonths(finalDate, initialDate)
+
+      newMonth = initialMonth
+      newYear = initialYear
+
+      const now = new Date()
+
+      for (let i = 0; i < quantityMonths; i++) {
+        if (newMonth > 12) {
+          newMonth = 1
+          newYear++
+        }
+
+        now.setSeconds(now.getSeconds() + i)
+
+        const newPayment = new Payment()
+        newPayment.month = newMonth
+        newPayment.year = newYear
+        newPayment.amount = Number((amount / quantityMonths).toPrecision(2))
+        newPayment.customerId = customerId
+
+        newPayment.createdAt = now
+        paymentsToCreate.push(newPayment)
+
+        newMonth++
+      }
+
+      const newRenegotiation = new Renegotiation()
+      newRenegotiation.initialMonth = initialMonth
+      newRenegotiation.initialYear = initialYear
+      newRenegotiation.finalMonth = finalMonth
+      newRenegotiation.finalYear = finalYear
+      newRenegotiation.amount = Number(amount)
+      newRenegotiation.negotiator = negotiator
+      newRenegotiation.customerId = customerId
 
       const renegotiationCreated = await entityManager.save(
         Renegotiation,

@@ -11,6 +11,7 @@ import {
   PaymentList,
 } from '@modules/payments/dtos/IFindAllPaymentsDTO'
 import Customer from '@modules/customers/infra/typeorm/entities/Customer'
+import ICreateOldPaymentsDTO from '@modules/payments/dtos/ICreateOldPaymentsDTO'
 
 class PaymentRepository implements IPaymentRepository {
   private ormRepository: Repository<Payment>
@@ -76,6 +77,35 @@ class PaymentRepository implements IPaymentRepository {
       }
 
       console.log(paymentsToCreate)
+
+      await entityManager.save(paymentsToCreate)
+
+      return paymentsToCreate
+    })
+  }
+
+  public async createList(
+    paymentsData: ICreateOldPaymentsDTO[],
+  ): Promise<Payment[]> {
+    return await this.connection.transaction(async entityManager => {
+      let paymentsToCreate: Payment[] = []
+
+      const now = new Date()
+
+      for (let i = 0; i < paymentsData.length; i++) {
+        const item = paymentsData[i]
+
+        now.setSeconds(now.getSeconds() + i)
+
+        const newPayment = new Payment()
+        newPayment.month = item.month
+        newPayment.year = item.year
+        newPayment.amount = Number(item.amount)
+        newPayment.customerId = item.customerId
+        newPayment.createdAt = now
+
+        paymentsToCreate.push(newPayment)
+      }
 
       await entityManager.save(paymentsToCreate)
 

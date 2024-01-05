@@ -1,3 +1,4 @@
+import ICreateOldPaymentsDTO from '../dtos/ICreateOldPaymentsDTO'
 import ICreatePaymentDTO from '../dtos/ICreatePaymentDTO'
 import {
   IFindAllPaymentsDTO,
@@ -8,6 +9,7 @@ import Payment from '../infra/typeorm/entities/Payment'
 
 export default interface IPaymentRepository {
   create(dataPayment: ICreatePaymentDTO): Promise<Payment[]>
+  createList(dataPayment: ICreateOldPaymentsDTO[]): Promise<Payment[]>
   findById(id: string): Promise<PaymentList | undefined>
   findEntityById(id: string): Promise<Payment | undefined>
   findAllByCustomerId(customerId: string): Promise<Payment[]>

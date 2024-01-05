@@ -8,6 +8,11 @@ import upload from '@config/upload'
 import { resolve } from 'path'
 import Renegotiation from '@modules/payments/infra/typeorm/entities/Renegotiation'
 import ICreateOldRenegotiationDTO from '@modules/payments/dtos/ICreateOldRenegotiationDTO'
+import ICustomerRepository from '../repositories/ICustomerRepository'
+import IRenegotiationRepository from '@modules/payments/repositories/IRenegotiationRepository'
+import IPaymentRepository from '@modules/payments/repositories/IPaymentRepository'
+import AppError from '@shared/errors/AppError'
+import Customer from '../infra/typeorm/entities/Customer'
 
 const monthsLetters = [
   'B',
@@ -33,14 +38,10 @@ function letterToMonthNumber(letter: string) {
 function capitalizeFirstLetter(str: string): string {
   const arr = str.split(' ')
 
-  //loop through each element of the array and capitalize the first letter.
-
   for (var i = 0; i < arr.length; i++) {
     arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1)
   }
 
-  //Join all the elements of the array back into a string
-  //using a blankspace as a separator
   const str2 = arr.join(' ')
   return str2
 }
@@ -50,12 +51,21 @@ class ConvertSpreadsheetCustomerUseCase {
   constructor(
     @inject('AiProvider')
     private aiProvider: IAiProvider,
+
+    @inject('CustomerRepository')
+    private customerRepository: ICustomerRepository,
+
+    @inject('PaymentRepository')
+    private paymentRepository: IPaymentRepository,
+
+    @inject('RenegotiationRepository')
+    private renegotiationRepository: IRenegotiationRepository,
   ) {}
 
   async execute({
     file,
     cityId,
-  }: IConvertSpreadsheetCustomerDTO): Promise<IShowCustomerByCodeResponseDTO> {
+  }: IConvertSpreadsheetCustomerDTO): Promise<Customer> {
     const originalName = resolve(upload.tmpFolder, file)
     const workbook = XLSX.readFile(originalName)
 
@@ -137,15 +147,27 @@ class ConvertSpreadsheetCustomerUseCase {
       }
     }
 
-    console.log(paymentsList)
-    console.log(renegotiationList)
     const csv = XLSX.utils.sheet_to_csv(worksheet)
 
+    let customer: Customer | undefined
+
     try {
-      const customer = await this.aiProvider.convertToJson(csv, cityId)
+      const customerJson = await this.aiProvider.convertToJson(csv, cityId)
+
+      customer = await this.customerRepository.create(customerJson)
+
+      await this.paymentRepository.createList(paymentsList)
+
+      for (let index = 0; index < renegotiationList.length; index++) {
+        const element = renegotiationList[index]
+
+        await this.renegotiationRepository.createWithDates(element)
+      }
+
       return customer
     } catch (error) {
-      throw new error()
+      if (customer) await this.customerRepository.remove(customer)
+      throw new AppError('Internal Error', 500)
     }
   }
 }

@@ -55,14 +55,14 @@ class Renegotiation {
   customer: Customer
 
   @Exclude()
-  @Column()
-  accountId: string
+  @Column({ nullable: true })
+  accountId?: string | undefined
 
   @ManyToOne(() => Account, account => account.payments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'accountId' })
-  account: Account
+  account?: Account | undefined
 
   @CreateDateColumn()
   createdAt: Date

@@ -33,6 +33,8 @@ class ConvertSpreadsheetCustomerController {
       cityId,
     })
 
+    await fs.promises.unlink(req.file.path)
+
     return res.json(customer)
   }
 }
