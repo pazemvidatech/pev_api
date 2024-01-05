@@ -13,6 +13,8 @@ import IRenegotiationRepository from '@modules/payments/repositories/IRenegotiat
 import IPaymentRepository from '@modules/payments/repositories/IPaymentRepository'
 import AppError from '@shared/errors/AppError'
 import Customer from '../infra/typeorm/entities/Customer'
+import { makeCode } from '@config/utils/make_code'
+import ICreateOldPaymentsDTO from '@modules/payments/dtos/ICreateOldPaymentsDTO'
 
 const monthsLetters = [
   'B',
@@ -46,6 +48,95 @@ function capitalizeFirstLetter(str: string): string {
   return str2
 }
 
+interface TableResponse {
+  renegotiationsList: ICreateOldRenegotiationDTO[]
+  paymentsList: ICreateOldPaymentsDTO[]
+}
+
+function getRenegotiationsAndPayments(
+  worksheet: XLSX.WorkSheet,
+): TableResponse {
+  let lineInit: number
+  let firstPayment: boolean = true
+
+  let lastOfSentence: string = ''
+
+  let paymentsList = []
+  let renegotiationsList = []
+
+  let renegotiation: ICreateOldRenegotiationDTO = {}
+
+  for (let cell in worksheet) {
+    const cellData = worksheet[cell]
+    const cellValue: any = cellData.v
+    const cellW: string = cellData.w
+
+    if (cellValue === 'ANOS') lineInit = parseInt(cell[1])
+
+    if (
+      parseInt(cell.substring(1)) > lineInit &&
+      cellValue != '' &&
+      monthsLetters.includes(cell[0])
+    ) {
+      if (!firstPayment) {
+        const isRenegotiation =
+          cellW.includes('XX') ||
+          (lastOfSentence.includes('XX') && !cellW.includes('XX')) ||
+          cellW.includes('REN')
+
+        const month = letterToMonthNumber(cell[0])
+        const year = worksheet['A' + cell.substring(1)].v
+
+        if (!isRenegotiation) {
+          const amount = cellW
+            .toUpperCase()
+            .replace(/[R\$C\.\,]/g, '')
+            .replace(/O/g, '0')
+            .trim()
+
+          const payment = { amount: parseInt(amount), month, year }
+
+          paymentsList.push(payment)
+        } else {
+          if (!renegotiation.amount) renegotiation.amount = 10000
+          if (!lastOfSentence.includes('XX') && cellW.includes('XX')) {
+            renegotiation.initialMonth = month
+            renegotiation.initialYear = year
+          } else if (cellW.includes('REN')) {
+            renegotiation.finalMonth = month
+            renegotiation.finalYear = year
+          } else if (lastOfSentence.includes('XX') && !cellW.includes('XX')) {
+            renegotiation.negotiator = capitalizeFirstLetter(
+              cellW.toLowerCase(),
+            )
+          }
+
+          if (
+            renegotiation.amount &&
+            renegotiation.initialMonth &&
+            renegotiation.initialYear &&
+            renegotiation.finalMonth &&
+            renegotiation.finalYear &&
+            renegotiation.negotiator
+          ) {
+            renegotiationsList.push(renegotiation)
+            renegotiation = {}
+          }
+        }
+
+        lastOfSentence = cellW
+      } else {
+        firstPayment = false
+      }
+    }
+  }
+
+  return {
+    paymentsList,
+    renegotiationsList,
+  }
+}
+
 @injectable()
 class ConvertSpreadsheetCustomerUseCase {
   constructor(
@@ -72,80 +163,9 @@ class ConvertSpreadsheetCustomerUseCase {
     // Convertendo a primeira aba do arquivo para JSON
     const worksheet = workbook.Sheets[workbook.SheetNames[0]]
 
-    let lineInit: number
-    let firstPayment: boolean = true
-
-    let lastOfSentence: string = ''
-
-    let paymentsList = []
-    let renegotiationList = []
-
-    let renegotiation: ICreateOldRenegotiationDTO = {}
-
-    for (let cell in worksheet) {
-      const cellData = worksheet[cell]
-      const cellValue: any = cellData.v
-      const cellW: string = cellData.w
-
-      if (cellValue === 'ANOS') lineInit = parseInt(cell[1])
-
-      if (
-        parseInt(cell.substring(1)) > lineInit &&
-        cellValue != '' &&
-        monthsLetters.includes(cell[0])
-      ) {
-        if (!firstPayment) {
-          const isRenegotiation =
-            cellW.includes('XX') ||
-            (lastOfSentence.includes('XX') && !cellW.includes('XX')) ||
-            cellW.includes('REN')
-
-          const month = letterToMonthNumber(cell[0])
-          const year = worksheet['A' + cell.substring(1)].v
-
-          if (!isRenegotiation) {
-            const amount = cellW
-              .toUpperCase()
-              .replace(/[R\$C\.\,]/g, '')
-              .replace(/O/g, '0')
-              .trim()
-
-            const payment = { amount: parseInt(amount), month, year }
-
-            paymentsList.push(payment)
-          } else {
-            if (!renegotiation.amount) renegotiation.amount = 10000
-            if (!lastOfSentence.includes('XX') && cellW.includes('XX')) {
-              renegotiation.initialMonth = month
-              renegotiation.initialYear = year
-            } else if (cellW.includes('REN')) {
-              renegotiation.finalMonth = month
-              renegotiation.finalYear = year
-            } else if (lastOfSentence.includes('XX') && !cellW.includes('XX')) {
-              renegotiation.negotiator = capitalizeFirstLetter(
-                cellW.toLowerCase(),
-              )
-            }
-
-            if (
-              renegotiation.amount &&
-              renegotiation.initialMonth &&
-              renegotiation.initialYear &&
-              renegotiation.finalMonth &&
-              renegotiation.finalYear &&
-              renegotiation.negotiator
-            ) {
-              renegotiationList.push(renegotiation)
-              renegotiation = {}
-            }
-          }
-
-          lastOfSentence = cellW
-        } else {
-          firstPayment = false
-        }
-      }
-    }
+    const { paymentsList, renegotiationsList } = getRenegotiationsAndPayments(
+      worksheet,
+    )
 
     const csv = XLSX.utils.sheet_to_csv(worksheet)
 
@@ -154,12 +174,36 @@ class ConvertSpreadsheetCustomerUseCase {
     try {
       const customerJson = await this.aiProvider.convertToJson(csv, cityId)
 
+      let code: string
+
+      while (!code) {
+        const codeGenerated = makeCode(8)
+
+        const checkExistsTicketCode = await this.customerRepository.findByCode(
+          codeGenerated,
+        )
+
+        if (!checkExistsTicketCode) code = codeGenerated
+      }
+
+      customerJson.code = code
+
       customer = await this.customerRepository.create(customerJson)
+
+      paymentsList.map(e => {
+        e.customerId = customer.id
+        return e
+      })
+
+      renegotiationsList.map(e => {
+        e.customerId = customer.id
+        return e
+      })
 
       await this.paymentRepository.createList(paymentsList)
 
-      for (let index = 0; index < renegotiationList.length; index++) {
-        const element = renegotiationList[index]
+      for (let index = 0; index < renegotiationsList.length; index++) {
+        const element = renegotiationsList[index]
 
         await this.renegotiationRepository.createWithDates(element)
       }
@@ -167,7 +211,7 @@ class ConvertSpreadsheetCustomerUseCase {
       return customer
     } catch (error) {
       if (customer) await this.customerRepository.remove(customer)
-      throw new AppError('Internal Error', 500)
+      throw new AppError(error.message, 500)
     }
   }
 }

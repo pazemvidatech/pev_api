@@ -147,13 +147,13 @@ class RenegotiationRepository implements IRenegotiationRepository {
       newMonth = initialMonth
       newYear = initialYear
 
-      const now = new Date()
-
       for (let i = 0; i < quantityMonths; i++) {
         if (newMonth > 12) {
           newMonth = 1
           newYear++
         }
+
+        const now = new Date()
 
         now.setSeconds(now.getSeconds() + i)
 

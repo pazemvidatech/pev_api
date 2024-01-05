@@ -7,6 +7,7 @@ import {
   ICreatePaymentRequestDTO,
 } from '../dtos/ICreateCustomerDTO'
 import ICityRepository from '@modules/cities/repositories/ICityRepository'
+import { makeCode } from '@config/utils/make_code'
 
 interface IRequest {
   name: string
@@ -22,16 +23,6 @@ interface IRequest {
   numberId: string
   dependents: ICreateDependentRequestDTO[]
   payments?: ICreatePaymentRequestDTO[]
-}
-
-function makeCode(length: number) {
-  let result = ''
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  const charactersLength = characters.length
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
 }
 
 @injectable()

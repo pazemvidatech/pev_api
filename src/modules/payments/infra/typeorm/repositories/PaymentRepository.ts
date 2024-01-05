@@ -90,10 +90,10 @@ class PaymentRepository implements IPaymentRepository {
     return await this.connection.transaction(async entityManager => {
       let paymentsToCreate: Payment[] = []
 
-      const now = new Date()
-
       for (let i = 0; i < paymentsData.length; i++) {
         const item = paymentsData[i]
+
+        const now = new Date()
 
         now.setSeconds(now.getSeconds() + i)
 
