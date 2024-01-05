@@ -26,6 +26,10 @@ const schema = {
       type: 'string',
       description: 'The address of the customer',
     },
+    phone: {
+      type: 'string',
+      description: 'The customers phone number, if not available, must be null',
+    },
     email: {
       type: 'string',
       description: 'The customers mail, if not available, must be null',
@@ -61,68 +65,70 @@ const schema = {
         required: ['name'],
       },
     },
-    payments: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          month: {
-            type: 'integer',
-            description: 'Month in number of the payment, january is equal 1',
-          },
-          year: {
-            type: 'integer',
-            description: 'Year in number of the payment',
-          },
-          amount: {
-            type: 'integer',
-            description:
-              'amount payed in payment in cents, example: R$ 20,00 equal 2000',
-          },
-        },
-        required: ['month', 'year', 'amount'],
-      },
-    },
-    renegotiations: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          initialMonth: {
-            type: 'integer',
-            description: 'Month in which a renegotiation occurred',
-          },
-          initialYear: {
-            type: 'integer',
-            description: 'Year in which a renegotiation occurred',
-          },
-          finalMonth: {
-            type: 'integer',
-            description: 'Month in which the renegotiation period ended',
-          },
-          finalYear: {
-            type: 'integer',
-            description: 'Year in which the renegotiation period ended',
-          },
-          negotiator: {
-            type: 'string',
-            description: 'Name of person who carried out the renegotiation',
-          },
-          amount: {
-            type: 'integer',
-            description: 'Always have value: 10000',
-          },
-        },
-        required: [
-          'initialMonth',
-          'initialYear',
-          'finalMonth',
-          'finalYear',
-          'negotiator',
-          'amount',
-        ],
-      },
-    },
+    // payments: {
+    //   type: 'array',
+    //   description:
+    //     'Renegotiations have a start and end period, marked by start in XXXX and end RENEG. There may be more than one',
+    //   items: {
+    //     type: 'object',
+    //     properties: {
+    //       month: {
+    //         type: 'integer',
+    //         description: 'Month in number of the payment, january is equal 1',
+    //       },
+    //       year: {
+    //         type: 'integer',
+    //         description: 'Year in number of the payment',
+    //       },
+    //       amount: {
+    //         type: 'integer',
+    //         description:
+    //           'amount payed in payment in cents, example: R$ 20,00 equal 2000',
+    //       },
+    //     },
+    //     required: ['month', 'year', 'amount'],
+    //   },
+    // },
+    // renegotiations: {
+    //   type: 'array',
+    //   items: {
+    //     type: 'object',
+    //     properties: {
+    //       initialMonth: {
+    //         type: 'integer',
+    //         description: 'First month of renegotiation',
+    //       },
+    //       initialYear: {
+    //         type: 'integer',
+    //         description: 'First year of the first month of renegotiation',
+    //       },
+    //       finalMonth: {
+    //         type: 'integer',
+    //         description: 'Last month of renegotiation',
+    //       },
+    //       finalYear: {
+    //         type: 'integer',
+    //         description: 'Last year of the last month of renegotiation',
+    //       },
+    //       negotiator: {
+    //         type: 'string',
+    //         description: 'Name of person who carried out the renegotiation',
+    //       },
+    //       amount: {
+    //         type: 'integer',
+    //         description: 'Always have value: 10000',
+    //       },
+    //     },
+    //     required: [
+    //       'initialMonth',
+    //       'initialYear',
+    //       'finalMonth',
+    //       'finalYear',
+    //       'negotiator',
+    //       'amount',
+    //     ],
+    //   },
+    // },
     cityId: {
       type: 'string',
       description: 'The value cityId passed in body',
@@ -134,13 +140,14 @@ const schema = {
     'frequency',
     'numberId',
     'address',
+    'phone',
     'email',
     'document',
     'oldRegister',
     'payday',
     'dependents',
-    'payments',
-    'renegotiations',
+    // 'payments',
+    // 'renegotiations',
     'cityId',
   ],
 }

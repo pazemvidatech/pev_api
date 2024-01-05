@@ -2,6 +2,7 @@ export interface ICreateCustomerRequestDTO {
   name: string
   email?: string | undefined
   document?: string | undefined
+  phone?: string | undefined
   code: string
   silverPlan: boolean
   oldRegister: boolean

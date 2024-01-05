@@ -11,6 +11,7 @@ export interface LatePaymentDTO {
 export interface IShowDebtorResponseDTO {
   name: string
   email?: string | undefined
+  phone?: string | undefined
   document?: string | undefined
   silverPlan: boolean
   address: string

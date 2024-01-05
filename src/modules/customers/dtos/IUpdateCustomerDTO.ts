@@ -4,6 +4,7 @@ export interface IUpdateCustomerRequestDTO {
   name: string
   email?: string | undefined
   document?: string | undefined
+  phone?: string | undefined
   silverPlan: boolean
   address: string
   cityId: string

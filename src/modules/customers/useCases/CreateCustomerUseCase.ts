@@ -11,6 +11,7 @@ import ICityRepository from '@modules/cities/repositories/ICityRepository'
 interface IRequest {
   name: string
   email?: string | undefined
+  phone?: string | undefined
   document?: string | undefined
   silverPlan: boolean
   oldRegister: boolean
@@ -49,6 +50,7 @@ class CreateCustomerUseCase {
     frequency,
     numberId,
     address,
+    phone,
     oldRegister,
     email,
     cityId,
@@ -83,6 +85,7 @@ class CreateCustomerUseCase {
         oldRegister,
         address,
         email,
+        phone,
         cityId,
         document,
         payday,

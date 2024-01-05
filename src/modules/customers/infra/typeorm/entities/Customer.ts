@@ -46,6 +46,9 @@ class Customer {
   @Column({ nullable: true })
   document?: string | undefined
 
+  @Column({ nullable: true })
+  phone?: string | undefined
+
   @Column({ default: false })
   oldRegister: boolean
 

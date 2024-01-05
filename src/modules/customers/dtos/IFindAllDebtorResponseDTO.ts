@@ -5,6 +5,7 @@ export interface IFindAllDebtorsResponseDTO {
   address: string
   email: string
   document: string
+  phone: string
   payday: number
   numberId: string
   paymentCount: number

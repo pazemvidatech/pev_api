@@ -39,6 +39,7 @@ customersRoutes.post(
       oldRegister: Joi.boolean().default(false).optional(),
       silverPlan: Joi.boolean().default(false).optional(),
       email: Joi.string().email().optional(),
+      phone: Joi.string().trim().optional(),
       cityId: Joi.string().uuid().required(),
       document: Joi.string().trim().optional(),
       dependents: Joi.array()

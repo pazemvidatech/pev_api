@@ -12,6 +12,7 @@ export interface IShowCustomerByCodeResponseDTO {
   name: string
   email?: string | undefined
   document?: string | undefined
+  phone?: string | undefined
   silverPlan: boolean
   address: string
   payday: number
