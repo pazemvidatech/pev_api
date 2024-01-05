@@ -167,6 +167,9 @@ class ConvertSpreadsheetCustomerUseCase {
       worksheet,
     )
 
+    console.log(paymentsList)
+    console.log(renegotiationsList)
+
     const csv = XLSX.utils.sheet_to_csv(worksheet)
 
     let customer: Customer | undefined
@@ -175,6 +178,8 @@ class ConvertSpreadsheetCustomerUseCase {
       const customerJson = await this.aiProvider.convertToJson(csv, cityId)
 
       let code: string
+
+      console.log(customerJson)
 
       while (!code) {
         const codeGenerated = makeCode(8)

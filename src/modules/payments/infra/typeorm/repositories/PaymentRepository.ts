@@ -1,7 +1,7 @@
 import { DataSource, Repository } from 'typeorm'
 import Datasource from '@shared/infra/typeorm'
 import IPaymentRepository from '@modules/payments/repositories/IPaymentRepository'
-import { addMonths } from 'date-fns'
+import { addMonths, addSeconds } from 'date-fns'
 
 import Payment from '../entities/Payment'
 import ICreatePaymentDTO from '@modules/payments/dtos/ICreatePaymentDTO'
@@ -64,7 +64,7 @@ class PaymentRepository implements IPaymentRepository {
 
         const now = new Date()
 
-        now.setSeconds(now.getSeconds() + i)
+        const createdAt = addSeconds(now, i)
 
         const newPayment = new Payment()
         newPayment.month = newMonth
@@ -72,7 +72,7 @@ class PaymentRepository implements IPaymentRepository {
         newPayment.amount = Number(amount)
         newPayment.customerId = customerId
         newPayment.accountId = accountId
-        newPayment.createdAt = now
+        newPayment.createdAt = createdAt
         paymentsToCreate.push(newPayment)
       }
 
@@ -95,14 +95,14 @@ class PaymentRepository implements IPaymentRepository {
 
         const now = new Date()
 
-        now.setSeconds(now.getSeconds() + i)
+        const createdAt = addSeconds(now, i)
 
         const newPayment = new Payment()
         newPayment.month = item.month
         newPayment.year = item.year
         newPayment.amount = Number(item.amount)
         newPayment.customerId = item.customerId
-        newPayment.createdAt = now
+        newPayment.createdAt = createdAt
 
         paymentsToCreate.push(newPayment)
       }

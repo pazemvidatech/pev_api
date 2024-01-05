@@ -59,7 +59,7 @@ const schema = {
           deathDate: {
             type: 'string',
             description:
-              'Add data if the person has died, if not, must be null',
+              'Add data if the person has died, if not, must be null. Set the Format: yyyy-mm-dd',
           },
         },
         required: ['name'],

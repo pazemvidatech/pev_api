@@ -1,7 +1,7 @@
 import { DataSource, Repository } from 'typeorm'
 import Datasource from '@shared/infra/typeorm'
 import IRenegotiationRepository from '@modules/payments/repositories/IRenegotiationRepository'
-import { addMonths, differenceInMonths, subMonths } from 'date-fns'
+import { addMonths, addSeconds, differenceInMonths, subMonths } from 'date-fns'
 
 import Renegotiation from '../entities/Renegotiation'
 import ICreateRenegotiationDTO from '@modules/payments/dtos/ICreateRenegotiationDTO'
@@ -83,7 +83,7 @@ class RenegotiationRepository implements IRenegotiationRepository {
 
         const now = new Date()
 
-        now.setSeconds(now.getSeconds() + i)
+        const createdAt = addSeconds(now, i)
 
         const newPayment = new Payment()
         newPayment.month = newMonth
@@ -91,7 +91,7 @@ class RenegotiationRepository implements IRenegotiationRepository {
         newPayment.amount = Number((amount / quantityMonths).toPrecision(2))
         newPayment.customerId = customerId
         newPayment.accountId = accountId
-        newPayment.createdAt = now
+        newPayment.createdAt = createdAt
         paymentsToCreate.push(newPayment)
       }
 
@@ -155,7 +155,7 @@ class RenegotiationRepository implements IRenegotiationRepository {
 
         const now = new Date()
 
-        now.setSeconds(now.getSeconds() + i)
+        const createdAt = addSeconds(now, i)
 
         const newPayment = new Payment()
         newPayment.month = newMonth
@@ -163,7 +163,7 @@ class RenegotiationRepository implements IRenegotiationRepository {
         newPayment.amount = Number((amount / quantityMonths).toPrecision(2))
         newPayment.customerId = customerId
 
-        newPayment.createdAt = now
+        newPayment.createdAt = createdAt
         paymentsToCreate.push(newPayment)
 
         newMonth++

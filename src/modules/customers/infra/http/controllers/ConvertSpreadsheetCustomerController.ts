@@ -16,9 +16,6 @@ class ConvertSpreadsheetCustomerController {
 
     const type = await FileType.fromFile(req.file.path)
 
-    console.log(type)
-    console.log(type.ext)
-
     if (!type || !['xls', 'xlsx', 'cfb'].includes(type.ext)) {
       await fs.promises.unlink(req.file.path)
       throw new AppError('Tipo de arquivo inválido', 422)
@@ -35,7 +32,10 @@ class ConvertSpreadsheetCustomerController {
 
     await fs.promises.unlink(req.file.path)
 
-    return res.json(customer)
+    return res.json({
+      id: customer.id,
+      name: customer.name,
+    })
   }
 }
 
